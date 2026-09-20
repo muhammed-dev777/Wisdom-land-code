@@ -1,0 +1,8339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WisdomLand Academy | Admin Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+/* =========================================================
+ROOT
+========================================================= */
+
+:root{
+    --primary:#0f172a;
+    --primary-light:#1e3a8a;
+    --primary-blue:#2563eb;
+    --secondary:#d97706;
+    --gold:#f59e0b;
+
+    --bg-gray:#f1f5f9;
+    --card-bg:#ffffff;
+
+    --text-dark:#0f172a;
+    --text-muted:#64748b;
+
+    --border-color:#e2e8f0;
+
+    --danger:#ef4444;
+    --success:#10b981;
+    --warning:#f59e0b;
+
+    --sidebar-width:270px;
+
+    --shadow-sm:0 4px 15px rgba(15,23,42,.05);
+    --shadow-md:0 10px 30px rgba(15,23,42,.08);
+    --shadow-lg:0 20px 50px rgba(15,23,42,.13);
+}
+
+
+/* =========================================================
+RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter','Segoe UI',Tahoma,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:
+        radial-gradient(circle at 10% 10%,rgba(37,99,235,.07),transparent 25%),
+        radial-gradient(circle at 90% 20%,rgba(245,158,11,.06),transparent 25%),
+        #f1f5f9;
+
+    color:var(--text-dark);
+    display:flex;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+
+/* =========================================================
+AMBIENT BACKGROUND
+========================================================= */
+
+.ambient-bg{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:-1;
+}
+
+.orb{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(2px);
+    opacity:.45;
+    animation:orbFloat 12s ease-in-out infinite;
+}
+
+.orb.one{
+    width:220px;
+    height:220px;
+    background:rgba(37,99,235,.10);
+    top:8%;
+    left:20%;
+}
+
+.orb.two{
+    width:280px;
+    height:280px;
+    background:rgba(245,158,11,.08);
+    right:5%;
+    bottom:5%;
+    animation-delay:2s;
+}
+
+.orb.three{
+    width:160px;
+    height:160px;
+    background:rgba(16,185,129,.07);
+    left:45%;
+    bottom:20%;
+    animation-delay:4s;
+}
+
+@keyframes orbFloat{
+
+0%,100%{
+    transform:translate3d(0,0,0) scale(1);
+}
+
+50%{
+    transform:translate3d(20px,-25px,0) scale(1.08);
+}
+
+}
+
+
+/* =========================================================
+SIDEBAR
+========================================================= */
+
+.sidebar{
+    width:var(--sidebar-width);
+    background:
+        linear-gradient(
+            180deg,
+            #07101f 0%,
+            #0f172a 50%,
+            #111d39 100%
+        );
+
+    color:white;
+    position:fixed;
+    top:0;
+    left:0;
+    height:100vh;
+
+    display:flex;
+    flex-direction:column;
+
+    z-index:1000;
+
+    transition:
+        transform .35s cubic-bezier(.4,0,.2,1),
+        box-shadow .3s;
+
+    box-shadow:
+        12px 0 40px rgba(15,23,42,.12);
+
+    overflow:hidden;
+}
+
+.sidebar::before{
+    content:"";
+    position:absolute;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    background:rgba(37,99,235,.10);
+    top:-100px;
+    right:-100px;
+    filter:blur(5px);
+}
+
+.sidebar-brand{
+    padding:22px 20px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.08);
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    position:relative;
+    z-index:2;
+}
+
+.sidebar-brand-content{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.sidebar-logo{
+    width:42px;
+    height:42px;
+    object-fit:cover;
+    border-radius:12px;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    box-shadow:
+        0 0 0 4px rgba(245,158,11,.08),
+        0 8px 20px rgba(0,0,0,.25);
+
+    animation:logoFloat 4s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+
+0%,100%{
+    transform:translateY(0);
+}
+
+50%{
+    transform:translateY(-3px);
+}
+
+}
+
+.sidebar-brand span{
+    font-family:'Outfit',sans-serif;
+    font-weight:800;
+    color:#fbbf24;
+    letter-spacing:.2px;
+}
+
+.sidebar-menu{
+    list-style:none;
+    padding:18px 12px;
+    flex-grow:1;
+    overflow-y:auto;
+    position:relative;
+    z-index:2;
+}
+
+.sidebar-menu li{
+    margin-bottom:5px;
+}
+
+.sidebar-menu li a{
+    display:flex;
+    align-items:center;
+    gap:13px;
+
+    padding:13px 15px;
+
+    color:#94a3b8;
+    text-decoration:none;
+
+    font-weight:600;
+    font-size:.88rem;
+
+    border-radius:12px;
+
+    position:relative;
+
+    transition:
+        background .25s,
+        color .25s,
+        transform .25s;
+}
+
+.sidebar-menu li a i{
+    width:22px;
+    text-align:center;
+    font-size:1rem;
+    transition:transform .25s;
+}
+
+.sidebar-menu li a:hover{
+    background:rgba(255,255,255,.07);
+    color:white;
+    transform:translateX(3px);
+}
+
+.sidebar-menu li a:hover i{
+    transform:scale(1.15);
+}
+
+.sidebar-menu li.active a{
+    background:
+        linear-gradient(
+            135deg,
+            rgba(37,99,235,.9),
+            rgba(30,58,138,.9)
+        );
+
+    color:white;
+
+    box-shadow:
+        0 8px 22px rgba(30,58,138,.25);
+}
+
+.sidebar-menu li.active a::before{
+    content:"";
+    position:absolute;
+    left:-12px;
+    top:8px;
+    bottom:8px;
+    width:4px;
+    border-radius:0 5px 5px 0;
+    background:#f59e0b;
+}
+
+.sidebar-footer{
+    padding:16px;
+    border-top:1px solid rgba(255,255,255,.08);
+    position:relative;
+    z-index:2;
+}
+
+.secure-badge{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 12px;
+    border-radius:10px;
+    background:rgba(16,185,129,.08);
+    border:1px solid rgba(16,185,129,.15);
+    color:#86efac;
+    font-size:.72rem;
+}
+
+.secure-dot{
+    width:7px;
+    height:7px;
+    background:#10b981;
+    border-radius:50%;
+    box-shadow:0 0 12px #10b981;
+    animation:pulseDot 1.7s infinite;
+}
+
+@keyframes pulseDot{
+
+0%,100%{
+    opacity:1;
+    transform:scale(1);
+}
+
+50%{
+    opacity:.5;
+    transform:scale(.75);
+}
+
+}
+
+
+/* =========================================================
+MAIN
+========================================================= */
+
+.main-content{
+    margin-left:var(--sidebar-width);
+    flex-grow:1;
+    padding:24px;
+    width:calc(100% - var(--sidebar-width));
+    min-width:0;
+
+    transition:
+        margin-left .35s,
+        width .35s;
+}
+
+
+/* =========================================================
+HEADER
+========================================================= */
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:25px;
+
+    background:
+        rgba(255,255,255,.88);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    padding:13px 18px;
+
+    border:
+        1px solid rgba(226,232,240,.8);
+
+    border-radius:18px;
+
+    box-shadow:
+        0 8px 30px rgba(15,23,42,.06);
+
+    gap:15px;
+
+    position:sticky;
+    top:15px;
+    z-index:100;
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    min-width:0;
+}
+
+.toggle-btn{
+    display:none;
+    background:#f1f5f9;
+    border:none;
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    font-size:1.1rem;
+    color:var(--text-dark);
+    cursor:pointer;
+}
+
+.search-bar{
+    display:flex;
+    align-items:center;
+    background:#f8fafc;
+    padding:9px 14px;
+    border-radius:12px;
+    width:270px;
+    border:1px solid #edf2f7;
+    transition:.25s;
+}
+
+.search-bar:focus-within{
+    border-color:#93c5fd;
+    box-shadow:0 0 0 4px rgba(37,99,235,.07);
+}
+
+.search-bar input{
+    border:none;
+    background:transparent;
+    outline:none;
+    margin-left:9px;
+    width:100%;
+    font-size:.85rem;
+}
+
+.header-status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:7px 10px;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    border:1px solid #d1fae5;
+    font-size:.7rem;
+    font-weight:700;
+}
+
+.header-status-dot{
+    width:7px;
+    height:7px;
+    background:#10b981;
+    border-radius:50%;
+    box-shadow:0 0 8px rgba(16,185,129,.7);
+}
+
+.user-profile{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.avatar{
+    width:43px;
+    height:43px;
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1e3a8a,
+            #2563eb
+        );
+
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-weight:bold;
+    overflow:hidden;
+
+    border:2px solid white;
+
+    box-shadow:
+        0 5px 15px rgba(30,58,138,.2);
+}
+
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.profile-role{
+    font-size:.7rem;
+    color:var(--text-muted);
+    margin-top:2px;
+}
+
+
+/* =========================================================
+SECTION
+========================================================= */
+
+.dashboard-section{
+    display:none;
+    animation:sectionIn .45s ease both;
+}
+
+.dashboard-section.active{
+    display:block;
+}
+
+@keyframes sectionIn{
+
+from{
+    opacity:0;
+    transform:translateY(12px);
+}
+
+to{
+    opacity:1;
+    transform:translateY(0);
+}
+
+}
+
+
+/* =========================================================
+PAGE HERO
+========================================================= */
+
+.dashboard-hero{
+    min-height:245px;
+    border-radius:22px;
+    overflow:hidden;
+    margin-bottom:25px;
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(7,16,31,.94) 0%,
+            rgba(15,23,42,.78) 48%,
+            rgba(15,23,42,.25) 100%
+        ),
+        url('https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1800&q=90')
+        center/cover;
+
+    box-shadow:
+        0 20px 45px rgba(15,23,42,.15);
+
+    display:flex;
+    align-items:center;
+}
+
+.dashboard-hero::after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:50%;
+    right:8%;
+    top:20%;
+    animation:heroRing 8s linear infinite;
+}
+
+@keyframes heroRing{
+
+to{
+    transform:rotate(360deg) scale(1.15);
+}
+
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    color:white;
+    padding:32px;
+    max-width:720px;
+}
+
+.hero-eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(245,158,11,.15);
+    border:1px solid rgba(245,158,11,.25);
+    color:#fbbf24;
+    font-size:.72rem;
+    font-weight:800;
+    margin-bottom:12px;
+}
+
+.hero-content h1{
+    font-family:'Outfit',sans-serif;
+    font-size:clamp(1.8rem,4vw,2.8rem);
+    line-height:1.08;
+    margin-bottom:12px;
+}
+
+.hero-content p{
+    color:#cbd5e1;
+    max-width:590px;
+    line-height:1.7;
+    font-size:.9rem;
+}
+
+.hero-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:20px;
+}
+
+.hero-mini{
+    position:absolute;
+    right:28px;
+    bottom:22px;
+    z-index:2;
+    background:rgba(255,255,255,.1);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.15);
+    color:white;
+    padding:11px 14px;
+    border-radius:12px;
+    font-size:.72rem;
+}
+
+
+/* =========================================================
+STATS
+========================================================= */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:
+        linear-gradient(
+            145deg,
+            #fff,
+            #f8fafc
+        );
+
+    padding:21px;
+
+    border-radius:18px;
+
+    border:1px solid rgba(226,232,240,.8);
+
+    box-shadow:var(--shadow-sm);
+
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    position:relative;
+    overflow:hidden;
+
+    transition:
+        transform .3s,
+        box-shadow .3s;
+}
+
+.stat-card::after{
+    content:"";
+    position:absolute;
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:rgba(37,99,235,.04);
+    right:-35px;
+    top:-35px;
+}
+
+.stat-card:hover{
+    transform:translateY(-5px);
+    box-shadow:var(--shadow-md);
+}
+
+.stat-icon{
+    width:54px;
+    height:54px;
+    border-radius:15px;
+    background:#eff6ff;
+    color:var(--primary-light);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:1.35rem;
+    flex-shrink:0;
+
+    box-shadow:
+        inset 0 0 0 1px rgba(37,99,235,.05);
+}
+
+.stat-info h3{
+    font-family:'Outfit',sans-serif;
+    font-size:1.55rem;
+    margin-bottom:3px;
+}
+
+.stat-info p{
+    color:var(--text-muted);
+    font-size:.78rem;
+    font-weight:600;
+}
+
+
+/* =========================================================
+SECTION TITLE
+========================================================= */
+
+.page-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.page-title h2{
+    font-family:'Outfit',sans-serif;
+    font-size:1.35rem;
+}
+
+.page-title p{
+    color:var(--text-muted);
+    margin-top:4px;
+    font-size:.78rem;
+}
+
+.title-icon{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:#eff6ff;
+    color:#1e3a8a;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    margin-right:8px;
+}
+
+
+/* =========================================================
+DATA CARD
+========================================================= */
+
+.data-card{
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(12px);
+
+    border-radius:18px;
+    padding:22px;
+
+    box-shadow:var(--shadow-sm);
+
+    border:1px solid rgba(226,232,240,.8);
+
+    margin-bottom:25px;
+
+    overflow-x:auto;
+}
+
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:18px;
+
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.card-header h3{
+    font-family:'Outfit',sans-serif;
+    font-size:1rem;
+}
+
+.card-header h3 i{
+    color:#1e3a8a;
+    margin-right:6px;
+}
+
+
+/* =========================================================
+BUTTONS
+========================================================= */
+
+.btn{
+    padding:9px 15px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+
+    font-weight:700;
+    font-size:.78rem;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    transition:
+        transform .2s,
+        box-shadow .2s,
+        opacity .2s;
+
+    position:relative;
+    overflow:hidden;
+}
+
+.btn::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:60%;
+    height:100%;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.3),
+        transparent
+    );
+    transform:skewX(-20deg);
+    transition:.5s;
+}
+
+.btn:hover::after{
+    left:130%;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 7px 18px rgba(15,23,42,.12);
+}
+
+.btn-primary{
+    background:linear-gradient(135deg,#1e3a8a,#2563eb);
+    color:white;
+}
+
+.btn-success{
+    background:linear-gradient(135deg,#059669,#10b981);
+    color:white;
+}
+
+.btn-danger{
+    background:linear-gradient(135deg,#dc2626,#ef4444);
+    color:white;
+}
+
+.btn-warning{
+    background:linear-gradient(135deg,#d97706,#f59e0b);
+    color:white;
+}
+
+.btn-light{
+    background:#f8fafc;
+    color:#334155;
+    border:1px solid #e2e8f0;
+}
+
+
+/* =========================================================
+TABLE
+========================================================= */
+
+.table-responsive{
+    width:100%;
+    overflow-x:auto;
+    border-radius:12px;
+}
+
+table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    text-align:left;
+    min-width:700px;
+}
+
+th,
+td{
+    padding:13px 14px;
+    border-bottom:1px solid var(--border-color);
+}
+
+th{
+    background:#f8fafc;
+    color:#64748b;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    white-space:nowrap;
+}
+
+th:first-child{
+    border-radius:10px 0 0 0;
+}
+
+th:last-child{
+    border-radius:0 10px 0 0;
+}
+
+td{
+    font-size:.78rem;
+}
+
+tbody tr{
+    transition:.2s;
+}
+
+tbody tr:hover{
+    background:#f8fbff;
+}
+
+.status-badge{
+    padding:5px 10px;
+    border-radius:999px;
+    font-size:.68rem;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.status-pending{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.status-approved{
+    background:#d1fae5;
+    color:#047857;
+}
+
+
+/* =========================================================
+NEWS
+========================================================= */
+
+.news-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+    gap:17px;
+}
+
+.news-item{
+    border:1px solid var(--border-color);
+    border-radius:15px;
+    padding:18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff,
+            #f8fafc
+        );
+
+    position:relative;
+
+    overflow:hidden;
+
+    transition:
+        transform .3s,
+        box-shadow .3s;
+}
+
+.news-item::before{
+    content:"";
+    position:absolute;
+    width:5px;
+    left:0;
+    top:0;
+    bottom:0;
+    background:linear-gradient(#f59e0b,#d97706);
+}
+
+.news-item:hover{
+    transform:translateY(-4px);
+    box-shadow:var(--shadow-md);
+}
+
+.news-image{
+    width:100%;
+    height:130px;
+    object-fit:cover;
+    border-radius:11px;
+    margin-bottom:14px;
+}
+
+.news-date{
+    display:inline-flex;
+    padding:5px 9px;
+    border-radius:8px;
+    background:#fff7ed;
+    color:#c2410c;
+    font-size:.68rem;
+    font-weight:800;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.news-item h4{
+    font-family:'Outfit',sans-serif;
+    font-size:.95rem;
+    margin-bottom:5px;
+}
+
+.news-item p{
+    font-size:.78rem;
+    color:var(--text-muted);
+    line-height:1.6;
+}
+
+.delete-btn{
+    position:absolute;
+    top:15px;
+    right:15px;
+
+    width:32px;
+    height:32px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:var(--danger);
+    cursor:pointer;
+
+    border:1px solid #fee2e2;
+    background:#fff;
+
+    border-radius:9px;
+
+    transition:.2s;
+
+    z-index:2;
+}
+
+.delete-btn:hover{
+    background:#fee2e2;
+    transform:scale(1.05);
+}
+
+
+/* =========================================================
+FINANCE HEADER
+========================================================= */
+
+.finance-heading{
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #172554
+        );
+
+    color:white;
+
+    border-radius:20px;
+
+    padding:24px;
+
+    margin-bottom:20px;
+
+    position:relative;
+    overflow:hidden;
+
+    box-shadow:
+        0 15px 35px rgba(15,23,42,.16);
+}
+
+.finance-heading::after{
+    content:"";
+    position:absolute;
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.08);
+    right:-50px;
+    top:-80px;
+    animation:heroRing 10s linear infinite;
+}
+
+.finance-heading-inner{
+    position:relative;
+    z-index:2;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.finance-heading h2{
+    font-family:'Outfit',sans-serif;
+    font-size:1.45rem;
+}
+
+.finance-heading p{
+    color:#94a3b8;
+    margin-top:5px;
+    font-size:.78rem;
+}
+
+
+/* =========================================================
+FINANCE SUMMARY
+========================================================= */
+
+.finance-summary{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+    margin-bottom:22px;
+}
+
+.finance-card{
+    background:
+        linear-gradient(
+            145deg,
+            #fff,
+            #f8fafc
+        );
+
+    border-radius:16px;
+    padding:18px;
+
+    box-shadow:var(--shadow-sm);
+
+    border:1px solid var(--border-color);
+    border-top:3px solid #1e3a8a;
+
+    min-width:0;
+
+    position:relative;
+    overflow:hidden;
+
+    transition:.3s;
+}
+
+.finance-card::after{
+    content:"";
+    position:absolute;
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    right:-25px;
+    top:-25px;
+    background:rgba(30,58,138,.04);
+}
+
+.finance-card:hover{
+    transform:translateY(-4px);
+    box-shadow:var(--shadow-md);
+}
+
+.finance-card.income{
+    border-top-color:#10b981;
+}
+
+.finance-card.expense{
+    border-top-color:#ef4444;
+}
+
+.finance-card.balance{
+    border-top-color:#d97706;
+}
+
+.finance-card.profit{
+    border-top-color:#2563eb;
+}
+
+.finance-card-title{
+    color:var(--text-muted);
+    font-size:.7rem;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.finance-card-value{
+    font-family:'Outfit',sans-serif;
+    font-size:1.25rem;
+    font-weight:800;
+}
+
+.finance-card-icon{
+    float:right;
+    font-size:1.2rem;
+    opacity:.55;
+}
+
+
+/* =========================================================
+FINANCE GRID
+========================================================= */
+
+.finance-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+    margin-bottom:22px;
+}
+
+.chart-box{
+    background:white;
+    border-radius:17px;
+    padding:20px;
+    box-shadow:var(--shadow-sm);
+    border:1px solid var(--border-color);
+    height:350px;
+    transition:.3s;
+}
+
+.chart-box:hover{
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-md);
+}
+
+.chart-box h3{
+    font-family:'Outfit',sans-serif;
+    font-size:.95rem;
+    margin-bottom:15px;
+}
+
+.chart-box h3 i{
+    color:#1e3a8a;
+    margin-right:6px;
+}
+
+.chart-container{
+    height:270px;
+    position:relative;
+}
+
+
+/* =========================================================
+AI PANEL
+========================================================= */
+
+.ai-panel{
+    background:
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(37,99,235,.35),
+            transparent 28%
+        ),
+        linear-gradient(
+            135deg,
+            #07101f 0%,
+            #0f172a 45%,
+            #1e3a8a 100%
+        );
+
+    color:white;
+
+    border-radius:22px;
+
+    padding:20px;
+
+    margin-bottom:23px;
+
+    box-shadow:
+        0 18px 45px rgba(15,23,42,.22);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    position:relative;
+    overflow:hidden;
+}
+
+.ai-panel::before{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.05);
+    right:-130px;
+    bottom:-150px;
+    animation:aiRotate 15s linear infinite;
+}
+
+@keyframes aiRotate{
+
+to{
+    transform:rotate(360deg);
+}
+
+}
+
+.ai-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:16px;
+    position:relative;
+    z-index:2;
+}
+
+.ai-icon{
+    width:52px;
+    height:52px;
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d97706,
+            #f59e0b
+        );
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:1.25rem;
+
+    box-shadow:
+        0 8px 22px rgba(245,158,11,.25);
+
+    animation:robotPulse 3s ease-in-out infinite;
+}
+
+@keyframes robotPulse{
+
+0%,100%{
+    transform:translateY(0) rotate(0);
+    box-shadow:0 8px 22px rgba(245,158,11,.25);
+}
+
+50%{
+    transform:translateY(-4px) rotate(2deg);
+    box-shadow:0 13px 30px rgba(245,158,11,.38);
+}
+
+}
+
+.ai-title-wrap{
+    flex:1;
+    min-width:180px;
+}
+
+.ai-title-row{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    flex-wrap:wrap;
+}
+
+.ai-title-row h2{
+    font-family:'Outfit',sans-serif;
+    font-size:1.05rem;
+}
+
+.ai-title-wrap p{
+    opacity:.6;
+    font-size:.72rem;
+    margin-top:4px;
+}
+
+.ai-status{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+
+    padding:4px 8px;
+
+    border-radius:999px;
+
+    background:rgba(16,185,129,.12);
+    border:1px solid rgba(16,185,129,.2);
+
+    color:#86efac;
+
+    font-size:.62rem;
+    font-weight:700;
+}
+
+.ai-status-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#10b981;
+    box-shadow:0 0 10px #10b981;
+}
+
+.ai-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.ai-clear-btn{
+    background:rgba(255,255,255,.08);
+    color:white;
+    border:1px solid rgba(255,255,255,.12);
+}
+
+
+/* =========================================================
+AI CHAT
+========================================================= */
+
+.ai-chat{
+    background:#fff;
+    color:var(--text-dark);
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+    z-index:2;
+    box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+
+.ai-chat-topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 15px;
+    border-bottom:1px solid #e2e8f0;
+    font-size:.78rem;
+    font-weight:800;
+}
+
+.ai-chat-topbar span{
+    font-size:.62rem;
+    padding:5px 9px;
+    border-radius:999px;
+    background:#eff6ff;
+    color:#1e3a8a;
+}
+
+.ai-chat-messages{
+    height:370px;
+    overflow-y:auto;
+    padding:17px;
+
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(37,99,235,.05),
+            transparent 25%
+        ),
+        linear-gradient(
+            180deg,
+            #f8fafc,
+            #eef2ff
+        );
+
+    scroll-behavior:smooth;
+}
+
+.ai-chat-messages::-webkit-scrollbar{
+    width:6px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-thumb{
+    background:#cbd5e1;
+    border-radius:10px;
+}
+
+.chat-row{
+    display:flex;
+    gap:9px;
+    margin-bottom:14px;
+    align-items:flex-start;
+
+    animation:chatIn .3s ease both;
+}
+
+.chat-row.user{
+    justify-content:flex-end;
+}
+
+@keyframes chatIn{
+
+from{
+    opacity:0;
+    transform:translateY(7px) scale(.98);
+}
+
+to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+
+}
+
+.chat-avatar{
+    width:32px;
+    height:32px;
+    border-radius:10px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    font-size:.75rem;
+}
+
+.chat-avatar.ai{
+    background:#0f172a;
+    color:#f59e0b;
+}
+
+.chat-avatar.user{
+    background:#1e3a8a;
+    color:#fff;
+}
+
+.chat-message{
+    padding:12px 14px;
+    border-radius:14px;
+    margin:0;
+
+    max-width:88%;
+
+    line-height:1.65;
+    font-size:.82rem;
+
+    box-shadow:
+        0 2px 8px rgba(15,23,42,.05);
+}
+
+.chat-message.ai{
+    background:#fff;
+    color:#0f172a;
+
+    border:1px solid #e2e8f0;
+
+    border-top-left-radius:5px;
+}
+
+.chat-message.user{
+    background:
+        linear-gradient(
+            135deg,
+            #1e3a8a,
+            #2563eb
+        );
+
+    color:#fff;
+
+    border-top-right-radius:5px;
+
+    box-shadow:
+        0 7px 18px rgba(30,58,138,.18);
+}
+
+.ai-message-meta{
+    font-size:.62rem;
+    color:#64748b;
+    margin-bottom:6px;
+
+    display:flex;
+    gap:7px;
+    align-items:center;
+}
+
+.ai-message-content h4{
+    font-size:.86rem;
+    margin:10px 0 6px;
+    color:#1e3a8a;
+}
+
+.ai-message-content ul,
+.ai-message-content ol{
+    padding-left:19px;
+    margin:5px 0;
+}
+
+.ai-message-content li{
+    margin-bottom:4px;
+}
+
+.ai-stat-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+    margin:10px 0;
+}
+
+.ai-stat{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:9px;
+    padding:9px;
+}
+
+.ai-stat span{
+    display:block;
+    color:#64748b;
+    font-size:.62rem;
+}
+
+.ai-stat strong{
+    display:block;
+    margin-top:2px;
+    font-size:.82rem;
+}
+
+
+/* =========================================================
+AI TYPING
+========================================================= */
+
+.ai-typing{
+    display:flex;
+    gap:4px;
+    align-items:center;
+    min-height:20px;
+}
+
+.ai-typing span{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#64748b;
+    animation:aiBounce 1.2s infinite;
+}
+
+.ai-typing span:nth-child(2){
+    animation-delay:.15s;
+}
+
+.ai-typing span:nth-child(3){
+    animation-delay:.3s;
+}
+
+@keyframes aiBounce{
+
+0%,60%,100%{
+    transform:translateY(0);
+    opacity:.4;
+}
+
+30%{
+    transform:translateY(-4px);
+    opacity:1;
+}
+
+}
+
+
+/* =========================================================
+AI FORM
+========================================================= */
+
+.ai-chat-form{
+    display:flex;
+    gap:8px;
+    padding:12px;
+
+    border-top:1px solid #e2e8f0;
+
+    background:#fff;
+}
+
+.ai-chat-form input{
+    flex:1;
+
+    padding:11px 13px;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    outline:none;
+
+    font-size:.8rem;
+
+    transition:.2s;
+}
+
+.ai-chat-form input:focus{
+    border-color:#93c5fd;
+    box-shadow:0 0 0 4px rgba(37,99,235,.06);
+}
+
+.ai-hint{
+    padding:0 13px 11px;
+    font-size:.62rem;
+    color:#94a3b8;
+    background:#fff;
+}
+
+
+/* =========================================================
+ALERTS
+========================================================= */
+
+.finance-alert{
+    padding:14px 16px;
+    border-radius:13px;
+    margin-bottom:10px;
+
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+
+    font-size:.78rem;
+
+    animation:sectionIn .35s ease both;
+}
+
+.finance-alert i{
+    margin-top:2px;
+}
+
+.alert-warning{
+    background:#fffbeb;
+    color:#92400e;
+    border:1px solid #fde68a;
+}
+
+.alert-danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border:1px solid #fecaca;
+}
+
+.alert-success{
+    background:#ecfdf5;
+    color:#065f46;
+    border:1px solid #a7f3d0;
+}
+
+
+/* =========================================================
+FILTERS
+========================================================= */
+
+.finance-filters{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:9px;
+    margin-bottom:5px;
+}
+
+.finance-filters input,
+.finance-filters select{
+    width:100%;
+    padding:10px 11px;
+
+    border:1px solid var(--border-color);
+    border-radius:9px;
+
+    outline:none;
+
+    background:white;
+
+    font-size:.75rem;
+
+    transition:.2s;
+}
+
+.finance-filters input:focus,
+.finance-filters select:focus{
+    border-color:#93c5fd;
+    box-shadow:0 0 0 3px rgba(37,99,235,.06);
+}
+
+
+/* =========================================================
+MODAL
+========================================================= */
+
+.modal{
+    display:none;
+
+    position:fixed;
+    inset:0;
+
+    background:
+        rgba(2,6,23,.68);
+
+    backdrop-filter:blur(7px);
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:2000;
+
+    padding:15px;
+
+    animation:modalBg .2s ease;
+}
+
+.modal.active{
+    display:flex;
+}
+
+@keyframes modalBg{
+
+from{
+    opacity:0;
+}
+
+to{
+    opacity:1;
+}
+
+}
+
+.modal-content{
+    background:white;
+
+    padding:25px;
+
+    border-radius:19px;
+
+    width:100%;
+    max-width:500px;
+
+    max-height:90vh;
+    overflow-y:auto;
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.25);
+
+    animation:modalIn .3s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes modalIn{
+
+from{
+    opacity:0;
+    transform:translateY(20px) scale(.97);
+}
+
+to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    font-size:.75rem;
+    font-weight:800;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    padding:11px;
+
+    border:1px solid var(--border-color);
+    border-radius:9px;
+
+    outline:none;
+
+    font-size:.82rem;
+
+    transition:.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 4px rgba(37,99,235,.07);
+}
+
+.form-row{
+    display:flex;
+    gap:15px;
+}
+
+
+/* =========================================================
+MESSAGES
+========================================================= */
+
+.message-card{
+    border:1px solid var(--border-color);
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:10px;
+    background:#fff;
+    transition:.25s;
+}
+
+.message-card:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-sm);
+}
+
+.message-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:7px;
+}
+
+.message-email{
+    color:#64748b;
+    font-size:.7rem;
+}
+
+.message-date{
+    color:#94a3b8;
+    font-size:.68rem;
+}
+
+.message-subject{
+    font-weight:800;
+    font-size:.8rem;
+}
+
+.message-body{
+    color:#64748b;
+    margin-top:6px;
+    font-size:.78rem;
+    line-height:1.6;
+}
+
+
+/* =========================================================
+TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+
+    padding:13px 17px;
+
+    border-radius:12px;
+
+    color:white;
+
+    background:#0f172a;
+
+    display:none;
+
+    z-index:3000;
+
+    font-size:.78rem;
+    font-weight:700;
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.2);
+
+    animation:toastIn .3s ease;
+}
+
+@keyframes toastIn{
+
+from{
+    opacity:0;
+    transform:translateY(12px);
+}
+
+to{
+    opacity:1;
+    transform:translateY(0);
+}
+
+}
+
+
+/* =========================================================
+MOBILE OVERLAY
+========================================================= */
+
+.sidebar-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.5);
+    z-index:999;
+}
+
+
+/* =========================================================
+LOADER
+========================================================= */
+
+.page-loader{
+    position:fixed;
+    inset:0;
+    background:#0f172a;
+    z-index:9999;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    transition:
+        opacity .5s,
+        visibility .5s;
+}
+
+.page-loader.hide{
+    opacity:0;
+    visibility:hidden;
+}
+
+.loader-box{
+    text-align:center;
+    color:white;
+}
+
+.loader-logo{
+    width:70px;
+    height:70px;
+    border-radius:18px;
+    object-fit:cover;
+    margin-bottom:14px;
+
+    animation:loaderPulse 1.3s infinite;
+}
+
+@keyframes loaderPulse{
+
+0%,100%{
+    transform:scale(1);
+}
+
+50%{
+    transform:scale(1.08);
+}
+
+}
+
+.loader-ring{
+    width:28px;
+    height:28px;
+    border:3px solid rgba(255,255,255,.15);
+    border-top-color:#f59e0b;
+    border-radius:50%;
+    margin:0 auto 10px;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+to{
+    transform:rotate(360deg);
+}
+}
+
+
+/* =========================================================
+MOBILE
+========================================================= */
+
+@media(max-width:1100px){
+
+.finance-summary{
+    grid-template-columns:repeat(3,1fr);
+}
+
+.finance-filters{
+    grid-template-columns:repeat(3,1fr);
+}
+
+}
+
+@media(max-width:900px){
+
+.finance-grid{
+    grid-template-columns:1fr;
+}
+
+.stats-grid{
+    grid-template-columns:1fr 1fr;
+}
+
+.finance-summary{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.finance-filters{
+    grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+@media(max-width:768px){
+
+.sidebar{
+    transform:translateX(-105%);
+}
+
+.sidebar.active{
+    transform:translateX(0);
+    box-shadow:15px 0 50px rgba(0,0,0,.3);
+}
+
+.sidebar-overlay.active{
+    display:block;
+}
+
+.main-content{
+    margin-left:0;
+    width:100%;
+    padding:14px;
+}
+
+header{
+    padding:10px 12px;
+    top:8px;
+    border-radius:14px;
+}
+
+.toggle-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.search-bar{
+    display:none;
+}
+
+.header-status{
+    display:none;
+}
+
+.profile-role{
+    display:none;
+}
+
+.user-profile strong{
+    font-size:.75rem !important;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+    border-radius:11px;
+}
+
+.dashboard-hero{
+    min-height:300px;
+}
+
+.hero-content{
+    padding:25px;
+}
+
+.hero-mini{
+    display:none;
+}
+
+.stats-grid{
+    grid-template-columns:1fr;
+}
+
+.finance-grid{
+    grid-template-columns:1fr;
+}
+
+.finance-summary{
+    grid-template-columns:1fr 1fr;
+}
+
+.finance-filters{
+    grid-template-columns:1fr 1fr;
+}
+
+.chart-box{
+    height:320px;
+}
+
+.chart-container{
+    height:240px;
+}
+
+.ai-chat-messages{
+    height:340px;
+    padding:12px;
+}
+
+.chat-message{
+    max-width:92%;
+    font-size:.77rem;
+}
+
+.ai-stat-grid{
+    grid-template-columns:1fr;
+}
+
+.ai-header{
+    align-items:flex-start;
+}
+
+.ai-actions{
+    width:100%;
+}
+
+.ai-actions .btn{
+    flex:1;
+}
+
+.form-row{
+    flex-direction:column;
+    gap:0;
+}
+
+}
+
+@media(max-width:500px){
+
+.main-content{
+    padding:10px;
+}
+
+.dashboard-hero{
+    min-height:320px;
+}
+
+.hero-content h1{
+    font-size:1.8rem;
+}
+
+.hero-content p{
+    font-size:.78rem;
+}
+
+.hero-actions .btn{
+    width:100%;
+}
+
+.finance-summary{
+    grid-template-columns:1fr;
+}
+
+.finance-filters{
+    grid-template-columns:1fr;
+}
+
+.finance-card-value{
+    font-size:1.2rem;
+}
+
+.data-card{
+    padding:15px;
+    border-radius:15px;
+}
+
+.finance-heading{
+    padding:18px;
+}
+
+.finance-heading-inner .btn{
+    flex:1;
+}
+
+.ai-panel{
+    padding:14px;
+    border-radius:17px;
+}
+
+.ai-title-row h2{
+    font-size:.92rem;
+}
+
+.ai-chat-form{
+    flex-direction:column;
+}
+
+.ai-chat-form button{
+    width:100%;
+}
+
+.news-grid{
+    grid-template-columns:1fr;
+}
+
+.toast{
+    left:12px;
+    right:12px;
+    bottom:12px;
+    text-align:center;
+}
+
+}
+
+
+/* =========================================================
+   WISDOMLAND ADVANCED LOCAL UI UPGRADE
+   API-INDEPENDENT: these modules use browser localStorage only.
+========================================================= */
+
+.ux-section{animation:uxFade .3s ease}
+@keyframes uxFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.ux-page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:20px;flex-wrap:wrap}
+.ux-page-head h2{font-family:'Outfit',sans-serif;margin:0 0 6px;font-size:1.45rem}
+.ux-page-head p{margin:0;color:var(--text-muted);font-size:.82rem}
+.ux-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ux-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}
+.ux-card{background:var(--card-bg);border:1px solid #e5e7eb;border-radius:18px;padding:18px;box-shadow:0 8px 25px rgba(15,23,42,.05)}
+.ux-card h3{margin:0 0 8px;font-family:'Outfit',sans-serif}
+.ux-card p{margin:0;color:var(--text-muted);font-size:.78rem}
+.ux-kpi{display:flex;align-items:center;gap:13px}
+.ux-kpi-icon{width:45px;height:45px;border-radius:13px;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-size:1.1rem}
+.ux-kpi strong{font-size:1.35rem;display:block}
+.ux-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:15px}
+.ux-toolbar input,.ux-toolbar select,.ux-form input,.ux-form select,.ux-form textarea{
+ width:100%;border:1px solid #dbe3ef;background:#fff;border-radius:11px;padding:11px 12px;outline:none;font:inherit;
+}
+.ux-toolbar input{max-width:300px}
+.ux-toolbar select{max-width:190px}
+.ux-table-wrap{overflow:auto}
+.ux-table{width:100%;border-collapse:collapse;min-width:760px}
+.ux-table th,.ux-table td{padding:12px;border-bottom:1px solid #eef2f7;text-align:left;font-size:.78rem;vertical-align:middle}
+.ux-table th{font-size:.7rem;text-transform:uppercase;color:#64748b;letter-spacing:.04em;background:#f8fafc}
+.ux-badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:.68rem;font-weight:800}
+.ux-success{background:#dcfce7;color:#166534}.ux-danger{background:#fee2e2;color:#991b1b}.ux-warning{background:#fef3c7;color:#92400e}.ux-info{background:#dbeafe;color:#1d4ed8}.ux-muted{background:#f1f5f9;color:#475569}
+.ux-icon-btn{border:0;background:#f1f5f9;width:34px;height:34px;border-radius:9px;cursor:pointer;color:#334155}
+.ux-icon-btn:hover{transform:translateY(-1px);background:#e2e8f0}
+.ux-empty{text-align:center;padding:35px;color:#94a3b8}
+.ux-empty i{font-size:2rem;display:block;margin-bottom:8px}
+.ux-form{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.ux-form .full{grid-column:1/-1}
+.ux-form label{display:block;font-size:.72rem;font-weight:800;margin-bottom:6px;color:#475569}
+.ux-form-actions{display:flex;justify-content:flex-end;gap:8px;grid-column:1/-1;margin-top:4px}
+.ux-check-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ux-check{border:1px solid #e2e8f0;border-radius:14px;padding:14px;cursor:pointer;background:#fff}
+.ux-check.active{border-color:#2563eb;background:#eff6ff}
+.ux-check input{accent-color:#2563eb}
+.ux-report-card{border:1px solid #e2e8f0;border-radius:15px;padding:16px;background:#fff}
+.ux-report-card h4{margin:0 0 12px}
+.ux-progress{height:9px;background:#e2e8f0;border-radius:99px;overflow:hidden}
+.ux-progress span{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#1e3a8a);border-radius:99px}
+.ux-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.ux-day{min-height:70px;border:1px solid #e5e7eb;border-radius:10px;padding:7px;background:#fff}
+.ux-day small{color:#64748b}.ux-day.today{border:2px solid #f59e0b}
+.ux-att{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.ux-att button{border:0;border-radius:7px;padding:4px 6px;font-size:.62rem;cursor:pointer}
+.ux-att .p{background:#dcfce7;color:#166534}.ux-att .a{background:#fee2e2;color:#991b1b}.ux-att .l{background:#fef3c7;color:#92400e}
+.ux-receipt{max-width:650px;margin:auto;border:1px solid #e2e8f0;border-radius:18px;padding:28px;background:#fff}
+.ux-receipt-head{text-align:center;border-bottom:2px dashed #cbd5e1;padding-bottom:18px;margin-bottom:18px}
+.ux-receipt-head img{width:58px;height:58px;object-fit:cover;border-radius:14px}
+.ux-receipt-row{display:flex;justify-content:space-between;gap:20px;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:.82rem}
+.ux-receipt-total{font-size:1.25rem;font-weight:900;margin-top:15px;display:flex;justify-content:space-between}
+.ux-notice{display:flex;align-items:flex-start;gap:12px;padding:12px;border:1px solid #e2e8f0;border-radius:13px;margin-bottom:8px}
+.ux-notice i{margin-top:3px;color:#2563eb}
+.ux-activity{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #eef2f7}
+.ux-activity:last-child{border-bottom:0}
+.ux-dot{width:10px;height:10px;border-radius:50%;background:#2563eb;margin-top:5px;flex:none}
+.ux-settings-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.ux-setting-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:15px 0;border-bottom:1px solid #eef2f7}
+.ux-switch{position:relative;width:46px;height:25px;flex:none}.ux-switch input{display:none}
+.ux-slider{position:absolute;inset:0;background:#cbd5e1;border-radius:99px;cursor:pointer;transition:.2s}
+.ux-slider:before{content:'';position:absolute;width:19px;height:19px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 2px 5px #0002}
+.ux-switch input:checked+.ux-slider{background:#2563eb}.ux-switch input:checked+.ux-slider:before{transform:translateX(21px)}
+.ux-modal{position:fixed;inset:0;background:rgba(15,23,42,.65);backdrop-filter:blur(6px);z-index:10000;display:none;align-items:center;justify-content:center;padding:15px}
+.ux-modal.active{display:flex}.ux-modal-box{width:min(700px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:20px;padding:22px;box-shadow:0 30px 80px #0004}
+.ux-modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.ux-modal-head h3{margin:0;font-family:'Outfit',sans-serif}
+.ux-close{border:0;background:#f1f5f9;width:36px;height:36px;border-radius:10px;cursor:pointer}
+.ux-dark{--ux-bg:#0b1220}
+body.ux-dark-mode{background:#0b1220!important;color:#e5e7eb}
+body.ux-dark-mode .ux-card,body.ux-dark-mode .ux-report-card,body.ux-dark-mode .ux-check,body.ux-dark-mode .ux-day,body.ux-dark-mode .ux-receipt{background:#111827;border-color:#243244;color:#e5e7eb}
+body.ux-dark-mode .ux-table th{background:#172033;color:#cbd5e1}
+body.ux-dark-mode .ux-form input,body.ux-dark-mode .ux-form select,body.ux-dark-mode .ux-form textarea,body.ux-dark-mode .ux-toolbar input,body.ux-dark-mode .ux-toolbar select{background:#111827;color:#e5e7eb;border-color:#334155}
+body.ux-dark-mode .ux-modal-box{background:#111827;color:#e5e7eb}
+body.ux-dark-mode .header-status{background:#052e24}
+body.ux-dark-mode header{background:rgba(17,24,39,.9);border-color:#243244}
+body.ux-dark-mode .main-content{color:#e5e7eb}
+body.ux-dark-mode .ux-setting-row{border-color:#243244}
+body.ux-dark-mode .ux-day small,body.ux-dark-mode .ux-card p,body.ux-dark-mode .ux-page-head p{color:#94a3b8}
+@media(max-width:1100px){.ux-grid{grid-template-columns:repeat(2,1fr)}.ux-check-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.ux-grid,.ux-settings-grid{grid-template-columns:1fr}.ux-form{grid-template-columns:1fr}.ux-check-grid{grid-template-columns:1fr 1fr}.ux-calendar{gap:4px}.ux-day{min-height:55px;padding:5px;font-size:.7rem}.ux-page-head h2{font-size:1.2rem}.ux-toolbar input,.ux-toolbar select{max-width:none}.ux-receipt{padding:18px}}
+
+
+
+  /* Settings Page Styling */
+.settings-container {
+    padding: 20px;
+    max-width: 500px;
+    margin: 20px 0;
+}
+
+.settings-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0e0e0;
+}
+
+.settings-card h3 {
+    color: #1e3c72;
+    margin-bottom: 8px;
+    font-size: 22px;
+}
+
+.settings-desc {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #1e3c72;
+    box-shadow: 0 0 5px rgba(30, 60, 114, 0.25);
+}
+
+.btn-change-pass {
+    width: 100%;
+    padding: 12px;
+    background-color: #1e3c72;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-change-pass:hover {
+    background-color: #2a5298;
+}
+
+/* መልእክቶች ማሳያ CSS */
+.status-msg {
+    margin-top: 15px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    display: none;
+    text-align: center;
+}
+
+.status-msg.success {
+    display: block;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-msg.error {
+    display: block;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+AMBIENT BACKGROUND
+========================================================= -->
+
+<div class="ambient-bg">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+</div>
+
+
+<!-- =========================================================
+PAGE LOADER
+========================================================= -->
+
+<div class="page-loader" id="pageLoader">
+
+    <div class="loader-box">
+
+        <img
+            src="Logo.jpg"
+            class="loader-logo"
+            alt="WisdomLand">
+
+        <div class="loader-ring"></div>
+
+        <div style="font-weight:800;">
+            WisdomLand Academy
+        </div>
+
+        <div style="
+            color:#94a3b8;
+            font-size:.7rem;
+            margin-top:5px;
+        ">
+            Loading Admin Dashboard...
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+SIDEBAR OVERLAY
+========================================================= -->
+
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+    onclick="toggleSidebar()">
+</div>
+
+
+<!-- =========================================================
+SIDEBAR
+========================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+
+        <div class="sidebar-brand-content">
+
+            <img
+                src="Logo.jpg"
+                alt="WisdomLand"
+                class="sidebar-logo">
+
+            <span>
+                WisdomLand Admin
+            </span>
+
+        </div>
+
+        <button
+            class="toggle-btn"
+            onclick="toggleSidebar()"
+            style="
+                background:rgba(255,255,255,.08);
+                color:white;
+            ">
+
+            <i class="fas fa-times"></i>
+
+        </button>
+
+    </div>
+
+
+    <ul class="sidebar-menu">
+
+        <li class="active">
+
+            <a
+                href="#"
+                onclick="switchTab('dashboard',this);return false;">
+
+                <i class="fas fa-chart-line"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="#"
+                onclick="switchTab('admissions',this);return false;">
+
+                <i class="fas fa-file-signature"></i>
+
+                Admissions
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="#"
+                onclick="switchTab('students',this);return false;">
+
+                <i class="fas fa-user-graduate"></i>
+
+                Students
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="#"
+                onclick="switchTab('finance',this);loadFinance();return false;">
+
+                <i class="fas fa-coins"></i>
+
+                Finance / Economy
+
+            </a>
+
+        </li>
+
+
+
+        <li>
+            <a href="#" onclick="switchTab('teachers',this);return false;">
+                <i class="fas fa-chalkboard-user"></i>
+                Teachers
+            </a>
+        </li>
+
+        <li>
+            <a href="#" onclick="switchTab('attendance',this);return false;">
+                <i class="fas fa-calendar-check"></i>
+                Attendance
+            </a>
+        </li>
+
+        <li>
+            <a href="#" onclick="switchTab('academics',this);return false;">
+                <i class="fas fa-graduation-cap"></i>
+                Exams & Results
+            </a>
+        </li>
+
+        <li>
+            <a href="#" onclick="switchTab('receipts',this);return false;">
+                <i class="fas fa-receipt"></i>
+                Receipts
+            </a>
+        </li>
+
+        <li>
+            <a href="#" onclick="switchTab('activity',this);return false;">
+                <i class="fas fa-clock-rotate-left"></i>
+                Activity
+            </a>
+        </li>
+
+        <li>
+            <a href="#" onclick="switchTab('notifications',this);return false;">
+                <i class="fas fa-bell"></i>
+                Notifications
+            </a>
+        </li>
+
+        <li>
+            <a href="#" onclick="switchTab('settings',this);return false;">
+                <i class="fas fa-gear"></i>
+                Settings
+            </a>
+        </li>
+
+        <li>
+
+            <a
+                href="#"
+                onclick="switchTab('announcements',this);return false;">
+
+                <i class="fas fa-bullhorn"></i>
+
+                Announcements
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="#"
+                onclick="switchTab('messages',this);return false;">
+
+                <i class="fas fa-envelope"></i>
+
+                Messages
+
+            </a>
+
+        </li>
+
+    </ul>
+
+
+    <div class="sidebar-footer">
+
+        <div class="secure-badge">
+
+            <span class="secure-dot"></span>
+
+            <span>
+                SECURE ADMIN PANEL
+            </span>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+MAIN
+========================================================= -->
+
+<main class="main-content">
+
+
+<header>
+
+    <div class="header-left">
+
+        <button
+            class="toggle-btn"
+            onclick="toggleSidebar()">
+
+            <i class="fas fa-bars"></i>
+
+        </button>
+
+
+        <div class="search-bar">
+
+            <i
+                class="fas fa-search"
+                style="color:var(--text-muted);">
+            </i>
+
+            <input
+                type="text"
+                placeholder="Search dashboard...">
+
+        </div>
+
+    </div>
+
+
+    <div style="
+        display:flex;
+        align-items:center;
+        gap:15px;
+    ">
+
+        <div class="header-status">
+
+            <span class="header-status-dot"></span>
+
+            API Connected
+
+        </div>
+
+
+        <div class="user-profile">
+
+            <div class="avatar">
+
+                <img
+                    src="Logo.jpg"
+                    alt="WisdomLand Admin Logo">
+
+            </div>
+
+            <div>
+
+                <strong
+                    style="
+                        display:block;
+                        font-size:.82rem;
+                    ">
+
+                    WisdomLand Admin
+
+                </strong>
+
+                <span class="profile-role">
+                    Registrar
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+DASHBOARD
+========================================================= -->
+
+<section
+    id="dashboard"
+    class="dashboard-section active">
+
+
+    <div class="dashboard-hero">
+
+        <div class="hero-content">
+
+            <div class="hero-eyebrow">
+
+                <i class="fas fa-sparkles"></i>
+
+                WISDOMLAND ACADEMY
+
+            </div>
+
+
+            <h1>
+                Welcome back, Admin 👋
+            </h1>
+
+
+            <p>
+                Manage admissions, students, school announcements,
+                messages and financial operations from one modern
+                administration center.
+            </p>
+
+
+            <div class="hero-actions">
+
+                <button
+                    class="btn btn-warning"
+                    onclick="
+                        switchTab(
+                            'admissions',
+                            document.querySelector(
+                                '.sidebar-menu li:nth-child(2) a'
+                            )
+                        );
+                    ">
+
+                    <i class="fas fa-file-signature"></i>
+
+                    View Admissions
+
+                </button>
+
+
+                <button
+                    class="btn"
+                    style="
+                        background:rgba(255,255,255,.1);
+                        color:white;
+                        border:1px solid rgba(255,255,255,.18);
+                    "
+                    onclick="
+                        switchTab(
+                            'finance',
+                            document.querySelector(
+                                '.sidebar-menu li:nth-child(4) a'
+                            )
+                        );
+                        loadFinance();
+                    ">
+
+                    <i class="fas fa-chart-pie"></i>
+
+                    Open Finance
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-mini">
+
+            <i class="fas fa-shield-halved"></i>
+
+            Admin Control Center
+
+        </div>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                <i class="fas fa-file-alt"></i>
+
+            </div>
+
+            <div class="stat-info">
+
+                <h3 id="statTotalAdmissions">
+                    0
+                </h3>
+
+                <p>
+                    Total Applications
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div
+                class="stat-icon"
+                style="
+                    background:#fef3c7;
+                    color:#d97706;
+                ">
+
+                <i class="fas fa-clock"></i>
+
+            </div>
+
+            <div class="stat-info">
+
+                <h3 id="statPending">
+                    0
+                </h3>
+
+                <p>
+                    Pending Review
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div
+                class="stat-icon"
+                style="
+                    background:#d1fae5;
+                    color:#059669;
+                ">
+
+                <i class="fas fa-user-check"></i>
+
+            </div>
+
+            <div class="stat-info">
+
+                <h3 id="statApproved">
+                    0
+                </h3>
+
+                <p>
+                    Approved Students
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="data-card">
+
+        <div class="card-header">
+
+            <h3>
+                <i class="fas fa-bullhorn"></i>
+                Recent Announcements
+            </h3>
+
+        </div>
+
+        <div
+            id="dashNoticeList"
+            class="news-grid">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+ADMISSIONS
+========================================================= -->
+
+<section
+    id="admissions"
+    class="dashboard-section">
+
+    <div class="page-title">
+
+        <div>
+
+            <h2>
+                <span class="title-icon">
+                    <i class="fas fa-file-signature"></i>
+                </span>
+
+                Admission Applications
+            </h2>
+
+            <p>
+                Review and manage student admission applications.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="data-card">
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>App ID</th>
+                        <th>Student Name</th>
+                        <th>Grade Level</th>
+                        <th>Contact Phone</th>
+                        <th>Date Submitted</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="admissionsTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+STUDENTS
+========================================================= -->
+
+<section
+    id="students"
+    class="dashboard-section">
+
+    <div class="page-title">
+
+        <div>
+
+            <h2>
+                <span class="title-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </span>
+
+                Registered Students
+            </h2>
+
+            <p>
+                View students registered through the Academy website.
+            </p>
+
+        </div>
+
+
+        <button
+            class="btn btn-primary"
+            onclick="fetchRegisteredStudents()">
+
+            <i class="fas fa-sync"></i>
+
+            Refresh List
+
+        </button>
+
+    </div>
+
+
+    <div class="data-card">
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Student ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Guardian Contact</th>
+                        <th>Address</th>
+                        <th>Registered Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="studentsTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+FINANCE
+========================================================= -->
+
+<section
+    id="finance"
+    class="dashboard-section">
+
+
+    <div class="finance-heading">
+
+        <div class="finance-heading-inner">
+
+            <div>
+
+                <h2>
+                    <i class="fas fa-coins"></i>
+                    Finance / Economy
+                </h2>
+
+                <p>
+                    WisdomLand Academy Financial Management Center
+                </p>
+
+            </div>
+
+
+            <div
+                style="
+                    display:flex;
+                    gap:8px;
+                    flex-wrap:wrap;
+                    position:relative;
+                    z-index:2;
+                ">
+
+                <button
+                    class="btn btn-success"
+                    onclick="openFinanceModal('income')">
+
+                    <i class="fas fa-plus"></i>
+
+                    Add Income
+
+                </button>
+
+
+                <button
+                    class="btn btn-danger"
+                    onclick="openFinanceModal('expense')">
+
+                    <i class="fas fa-minus"></i>
+
+                    Add Expense
+
+                </button>
+
+
+                <button
+                    class="btn"
+                    style="
+                        background:rgba(255,255,255,.1);
+                        color:white;
+                        border:1px solid rgba(255,255,255,.15);
+                    "
+                    onclick="loadFinance()">
+
+                    <i class="fas fa-sync"></i>
+
+                    Refresh
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="finance-summary">
+
+
+        <div class="finance-card income">
+
+            <i
+                class="fas fa-arrow-trend-up finance-card-icon"
+                style="color:#10b981;">
+            </i>
+
+            <div class="finance-card-title">
+                Total Income
+            </div>
+
+            <div
+                class="finance-card-value"
+                id="financeTotalIncome">
+                0 ETB
+            </div>
+
+        </div>
+
+
+        <div class="finance-card expense">
+
+            <i
+                class="fas fa-arrow-trend-down finance-card-icon"
+                style="color:#ef4444;">
+            </i>
+
+            <div class="finance-card-title">
+                Total Expenses
+            </div>
+
+            <div
+                class="finance-card-value"
+                id="financeTotalExpense">
+                0 ETB
+            </div>
+
+        </div>
+
+
+        <div class="finance-card balance">
+
+            <i
+                class="fas fa-wallet finance-card-icon"
+                style="color:#d97706;">
+            </i>
+
+            <div class="finance-card-title">
+                Net Balance
+            </div>
+
+            <div
+                class="finance-card-value"
+                id="financeBalance">
+                0 ETB
+            </div>
+
+        </div>
+
+
+        <div class="finance-card profit">
+
+            <i
+                class="fas fa-percent finance-card-icon"
+                style="color:#1e3a8a;">
+            </i>
+
+            <div class="finance-card-title">
+                Profit Margin
+            </div>
+
+            <div
+                class="finance-card-value"
+                id="financeProfitMargin">
+                0%
+            </div>
+
+        </div>
+
+
+        <div class="finance-card">
+
+            <i
+                class="fas fa-receipt finance-card-icon">
+            </i>
+
+            <div class="finance-card-title">
+                Transactions
+            </div>
+
+            <div
+                class="finance-card-value"
+                id="financeTransactions">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ALERTS -->
+
+    <div id="financeAlerts"></div>
+
+
+    <!-- =====================================================
+    AI
+    ===================================================== -->
+
+    <div class="ai-panel">
+
+        <div class="ai-header">
+
+            <div class="ai-icon">
+
+                <i class="fas fa-robot"></i>
+
+            </div>
+
+
+            <div class="ai-title-wrap">
+
+                <div class="ai-title-row">
+
+                    <h2>
+                        WisdomLand AI Financial Assistant
+                    </h2>
+
+                    <span class="ai-status">
+
+                        <span class="ai-status-dot"></span>
+
+                        Gemini Online
+
+                    </span>
+
+                </div>
+
+                <p>
+                    Gemini 3.6 Flash • Financial analysis & smart questions
+                </p>
+
+            </div>
+
+
+            <div class="ai-actions">
+
+                <button
+                    class="btn btn-warning"
+                    type="button"
+                    onclick="runGeminiFinanceAnalysis()"
+                    id="aiAnalyzeButton">
+
+                    <i class="fas fa-wand-magic-sparkles"></i>
+
+                    AI Analyze
+
+                </button>
+
+
+                <button
+                    class="btn ai-clear-btn"
+                    type="button"
+                    onclick="clearAIChat()">
+
+                    <i class="fas fa-broom"></i>
+
+                    Clear
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="ai-chat">
+
+            <div class="ai-chat-topbar">
+
+                <div>
+
+                    <i
+                        class="fas fa-message"
+                        style="color:#1e3a8a;margin-right:5px;">
+                    </i>
+
+                    Gemini Finance Chat
+
+                </div>
+
+                <span>
+                    AI • ETB
+                </span>
+
+            </div>
+
+
+            <div
+                class="ai-chat-messages"
+                id="aiChatMessages">
+
+                <div class="chat-row ai">
+
+                    <div class="chat-avatar ai">
+
+                        <i class="fas fa-robot"></i>
+
+                    </div>
+
+                    <div class="chat-message ai">
+
+                        <div class="ai-message-meta">
+                            Gemini 3.6 Flash
+                        </div>
+
+                        <div class="ai-message-content">
+
+                            <strong>
+                                Hello 👋
+                            </strong>
+
+                            <br>
+
+                            I am your WisdomLand financial
+                            assistant.
+
+                            <br><br>
+
+                            Click
+                            <strong>AI Analyze</strong>
+                            to analyze the current financial
+                            records, or ask me a question below.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <form
+                class="ai-chat-form"
+                onsubmit="askFinanceAI(event)">
+
+                <input
+                    id="aiQuestion"
+                    type="text"
+                    placeholder="Ask Gemini: What is our biggest expense?"
+                    autocomplete="off"
+                    required>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="aiAskButton">
+
+                    <i class="fas fa-paper-plane"></i>
+
+                    Ask Gemini
+
+                </button>
+
+            </form>
+
+
+            <div class="ai-hint">
+
+                <i class="fas fa-lightbulb"></i>
+
+                Ask about income, expenses, balance,
+                categories, risks or recommendations.
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+    GRAPHS
+    ===================================================== -->
+
+    <div class="finance-grid">
+
+
+        <div class="chart-box">
+
+            <h3>
+
+                <i class="fas fa-chart-column"></i>
+
+                Monthly Income vs Expenses
+
+            </h3>
+
+            <div class="chart-container">
+
+                <canvas
+                    id="incomeExpenseChart">
+                </canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-box">
+
+            <h3>
+
+                <i class="fas fa-chart-line"></i>
+
+                Financial Trend
+
+            </h3>
+
+            <div class="chart-container">
+
+                <canvas
+                    id="trendChart">
+                </canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-box">
+
+            <h3>
+
+                <i class="fas fa-chart-pie"></i>
+
+                Expense Categories
+
+            </h3>
+
+            <div class="chart-container">
+
+                <canvas
+                    id="expenseCategoryChart">
+                </canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-box">
+
+            <h3>
+
+                <i class="fas fa-money-bill-trend-up"></i>
+
+                Income Sources
+
+            </h3>
+
+            <div class="chart-container">
+
+                <canvas
+                    id="incomeSourceChart">
+                </canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+    FILTERS
+    ===================================================== -->
+
+    <div class="data-card">
+
+        <div class="card-header">
+
+            <h3>
+
+                <i class="fas fa-filter"></i>
+
+                Financial Filters
+
+            </h3>
+
+
+            <button
+                class="btn btn-light"
+                onclick="resetFinanceFilters()">
+
+                <i class="fas fa-rotate-left"></i>
+
+                Reset
+
+            </button>
+
+        </div>
+
+
+        <div class="finance-filters">
+
+            <input
+                type="date"
+                id="financeDateFrom"
+                onchange="renderFinance()">
+
+
+            <input
+                type="date"
+                id="financeDateTo"
+                onchange="renderFinance()">
+
+
+            <select
+                id="financeTypeFilter"
+                onchange="renderFinance()">
+
+                <option value="">
+                    All Types
+                </option>
+
+                <option value="Income">
+                    Income
+                </option>
+
+                <option value="Expense">
+                    Expense
+                </option>
+
+            </select>
+
+
+            <select
+                id="financeCategoryFilter"
+                onchange="renderFinance()">
+
+                <option value="">
+                    All Categories
+                </option>
+
+                <option>Student Tuition</option>
+                <option>Registration Fee</option>
+                <option>Transport Fee</option>
+                <option>Other Income</option>
+
+                <option>Teacher Salary</option>
+                <option>Staff Salary</option>
+                <option>Rent</option>
+                <option>Electricity</option>
+                <option>Water</option>
+                <option>Internet</option>
+                <option>School Supplies</option>
+                <option>Books</option>
+                <option>Maintenance</option>
+                <option>Transport</option>
+                <option>Other Expense</option>
+
+            </select>
+
+
+            <input
+                type="text"
+                id="financeSearch"
+                placeholder="Search transactions..."
+                oninput="renderFinance()">
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+    TRANSACTIONS
+    ===================================================== -->
+
+    <div class="data-card">
+
+        <div class="card-header">
+
+            <h3>
+
+                <i class="fas fa-list"></i>
+
+                Financial Transactions
+
+            </h3>
+
+
+            <button
+                class="btn btn-warning"
+                onclick="printFinancialReport()">
+
+                <i class="fas fa-print"></i>
+
+                Financial Report
+
+            </button>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Payment</th>
+                        <th>Recorded By</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="financeTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+ANNOUNCEMENTS
+========================================================= -->
+
+<section
+    id="announcements"
+    class="dashboard-section">
+
+    <div class="page-title">
+
+        <div>
+
+            <h2>
+
+                <span class="title-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </span>
+
+                Manage News & Notices
+
+            </h2>
+
+            <p>
+                Publish announcements to the Academy website.
+            </p>
+
+        </div>
+
+
+        <button
+            class="btn btn-primary"
+            onclick="openModal('addNewsModal')">
+
+            <i class="fas fa-plus"></i>
+
+            Add Notice
+
+        </button>
+
+    </div>
+
+
+    <div class="data-card">
+
+        <div
+            id="newsGrid"
+            class="news-grid">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+MESSAGES
+========================================================= -->
+
+<section
+    id="messages"
+    class="dashboard-section">
+
+    <div class="page-title">
+
+        <div>
+
+            <h2>
+
+                <span class="title-icon">
+                    <i class="fas fa-envelope"></i>
+                </span>
+
+                Contact Messages
+
+            </h2>
+
+            <p>
+                Messages received from the public website.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="data-card">
+
+        <div id="messageList"></div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+ADVANCED LOCAL MODULES
+These UI modules do not change the existing API.
+========================================================= -->
+
+<section id="teachers" class="dashboard-section ux-section">
+  <div class="ux-page-head">
+    <div><h2><i class="fas fa-chalkboard-user"></i> Teachers Management</h2><p>Manage teacher records locally without changing the existing API.</p></div>
+    <div class="ux-actions"><button class="btn btn-primary" onclick="openUxModal('teacherModal')"><i class="fas fa-plus"></i> Add Teacher</button><button class="btn btn-light" onclick="exportUxData('teachers')"><i class="fas fa-download"></i> Export</button></div>
+  </div>
+  <div class="ux-grid" id="teacherKpis"></div>
+  <div class="data-card">
+    <div class="ux-toolbar"><input id="teacherSearch" placeholder="Search teacher, subject or phone..." oninput="renderTeachers()"><select id="teacherStatus" onchange="renderTeachers()"><option value="">All Status</option><option>Active</option><option>On Leave</option><option>Inactive</option></select></div>
+    <div class="ux-table-wrap"><table class="ux-table"><thead><tr><th>ID</th><th>Teacher</th><th>Subject</th><th>Class</th><th>Phone</th><th>Salary</th><th>Status</th><th>Actions</th></tr></thead><tbody id="teachersUxBody"></tbody></table></div>
+  </div>
+</section>
+
+<section id="attendance" class="dashboard-section ux-section">
+  <div class="ux-page-head">
+    <div><h2><i class="fas fa-calendar-check"></i> Attendance Center</h2><p>Daily student and teacher attendance tracker stored in this browser.</p></div>
+    <div class="ux-actions"><button class="btn btn-primary" onclick="saveAttendanceDay()"><i class="fas fa-save"></i> Save Day</button><button class="btn btn-light" onclick="printAttendance()"><i class="fas fa-print"></i> Print</button></div>
+  </div>
+  <div class="ux-grid" id="attendanceKpis"></div>
+  <div class="data-card">
+    <div class="ux-toolbar">
+      <input type="date" id="attendanceDate" onchange="renderAttendance()">
+      <select id="attendanceGroup" onchange="renderAttendance()"><option value="students">Students</option><option value="teachers">Teachers</option></select>
+      <input id="attendanceSearch" placeholder="Search name or ID..." oninput="renderAttendance()">
+    </div>
+    <div class="ux-table-wrap"><table class="ux-table"><thead><tr><th>ID</th><th>Name</th><th>Present</th><th>Absent</th><th>Late</th><th>Today Status</th><th>Mark</th></tr></thead><tbody id="attendanceBody"></tbody></table></div>
+  </div>
+</section>
+
+<section id="academics" class="dashboard-section ux-section">
+  <div class="ux-page-head">
+    <div><h2><i class="fas fa-graduation-cap"></i> Exams & Results</h2><p>Record marks, calculate totals, averages and grades locally.</p></div>
+    <div class="ux-actions"><button class="btn btn-primary" onclick="openUxModal('resultModal')"><i class="fas fa-plus"></i> Add Result</button><button class="btn btn-light" onclick="printResults()"><i class="fas fa-print"></i> Report Card</button></div>
+  </div>
+  <div class="ux-grid" id="academicKpis"></div>
+  <div class="data-card">
+    <div class="ux-toolbar"><input id="resultSearch" placeholder="Search student or subject..." oninput="renderResults()"><select id="resultGradeFilter" onchange="renderResults()"><option value="">All Grades</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option><option>Grade 11</option><option>Grade 12</option></select></div>
+    <div class="ux-table-wrap"><table class="ux-table"><thead><tr><th>Student</th><th>ID</th><th>Grade</th><th>Subject</th><th>Exam</th><th>Mark</th><th>Grade</th><th>Actions</th></tr></thead><tbody id="resultsBody"></tbody></table></div>
+  </div>
+</section>
+
+<section id="receipts" class="dashboard-section ux-section">
+  <div class="ux-page-head">
+    <div><h2><i class="fas fa-receipt"></i> Receipt Center</h2><p>Create and print professional payment receipts from finance records.</p></div>
+    <div class="ux-actions"><button class="btn btn-primary" onclick="openUxModal('receiptModal')"><i class="fas fa-plus"></i> New Receipt</button><button class="btn btn-light" onclick="renderReceipts()"><i class="fas fa-sync"></i> Refresh</button></div>
+  </div>
+  <div class="ux-grid" id="receiptKpis"></div>
+  <div class="data-card"><div class="ux-toolbar"><input id="receiptSearch" placeholder="Search receipt, student or amount..." oninput="renderReceipts()"></div>
+    <div class="ux-table-wrap"><table class="ux-table"><thead><tr><th>Receipt No.</th><th>Date</th><th>Student</th><th>Category</th><th>Payment</th><th>Amount</th><th>Action</th></tr></thead><tbody id="receiptsBody"></tbody></table></div>
+  </div>
+</section>
+
+<section id="activity" class="dashboard-section ux-section">
+  <div class="ux-page-head"><div><h2><i class="fas fa-clock-rotate-left"></i> Activity Log</h2><p>Local activity history for actions performed in this dashboard.</p></div><button class="btn btn-danger" onclick="clearActivityLog()"><i class="fas fa-trash"></i> Clear Log</button></div>
+  <div class="data-card"><div id="activityList"></div></div>
+</section>
+
+<section id="notifications" class="dashboard-section ux-section">
+  <div class="ux-page-head"><div><h2><i class="fas fa-bell"></i> Notification Center</h2><p>Dashboard alerts and reminders generated from local records.</p></div><div class="ux-actions"><button class="btn btn-primary" onclick="generateUxNotifications()"><i class="fas fa-wand-magic-sparkles"></i> Refresh Alerts</button><button class="btn btn-light" onclick="markAllUxNotificationsRead()">Mark all read</button></div></div>
+  <div class="ux-grid" id="notificationKpis"></div>
+  <div class="data-card"><div id="notificationList"></div></div>
+</section>
+
+<section id="settings" class="dashboard-section ux-section">
+  <div class="ux-page-head"><div><h2><i class="fas fa-gear"></i> Dashboard Settings</h2><p>Personalize this admin interface. These settings stay in this browser.</p></div></div>
+  <div class="ux-settings-grid">
+    <div class="ux-card">
+      <h3>Appearance</h3>
+      <div class="ux-setting-row"><div><strong>Dark Mode</strong><p>Switch the dashboard between light and dark appearance.</p></div><label class="ux-switch"><input type="checkbox" id="darkModeToggle" onchange="toggleUxDark(this.checked)"><span class="ux-slider"></span></label></div>
+      <div class="ux-setting-row"><div><strong>Compact Tables</strong><p>Reduce table spacing on smaller screens.</p></div><label class="ux-switch"><input type="checkbox" id="compactToggle" onchange="toggleUxCompact(this.checked)"><span class="ux-slider"></span></label></div>
+    </div>
+    <div class="ux-card">
+      <h3>School Information</h3>
+      <form class="ux-form" onsubmit="saveSchoolSettings(event)">
+        <div><label>Academy Name</label><input id="setSchoolName" value="WisdomLand Academy"></div>
+        <div><label>Academic Year</label><input id="setAcademicYear" value="2026"></div>
+        <div><label>Phone</label><input id="setSchoolPhone" placeholder="+251..."></div>
+        <div><label>Email</label><input id="setSchoolEmail" placeholder="academy@example.com"></div>
+        <div class="full"><label>Address</label><textarea id="setSchoolAddress" rows="2" placeholder="Add school address"></textarea></div>
+        <div class="ux-form-actions"><button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Save Settings</button></div>
+      </form>
+    </div>
+    <div class="ux-card">
+      <h3>Local Data Tools</h3>
+      <div class="ux-actions">
+        <button class="btn btn-light" onclick="exportAllUxData()"><i class="fas fa-file-export"></i> Export Local Data</button>
+        <button class="btn btn-light" onclick="importUxData()"><i class="fas fa-file-import"></i> Import Data</button>
+        <button class="btn btn-danger" onclick="resetUxData()"><i class="fas fa-triangle-exclamation"></i> Reset Added UI Data</button>
+      </div>
+      <p style="margin-top:12px">This does not delete or modify your existing API data.</p>
+    </div>
+    <div class="ux-card">
+      <h3>Quick System Status</h3>
+      <div class="ux-setting-row"><div><strong>Existing API</strong><p>Kept exactly as configured in the original dashboard.</p></div><span class="ux-badge ux-success">UNCHANGED</span></div>
+      <div class="ux-setting-row"><div><strong>Local Modules</strong><p>Teachers, attendance, results, receipts and settings.</p></div><span class="ux-badge ux-info">ACTIVE</span></div>
+    </div>
+  </div>
+
+  //setting off password
+  <!-- Dashboard Settings Section - Change Password -->
+<div class="settings-container">
+    <div class="settings-card">
+        <h3>🔑 የይለፍ ቃል መቀየሪያ (Change Password)</h3>
+        <p class="settings-desc">የእርስዎን Wisdom Land ዳሽቦርድ መግቢያ የይለፍ ቃል እዚህ መቀየር ይችላሉ።</p>
+        
+        <form id="changePasswordForm">
+            <div class="form-group">
+                <label for="oldPassword">የነበረው (የአሁኑ) የይለፍ ቃል</label>
+                <input type="password" id="oldPassword" placeholder="የነበረውን password ያስገቡ..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="newPassword">አዲስ የይለፍ ቃል</label>
+                <input type="password" id="newPassword" placeholder="አዲስ password ያስገቡ (ቢያንስ 6 ፊደላት/ቁጥሮች)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">አዲሱን የይለፍ ቃል ያረጋግጡ</label>
+                <input type="password" id="confirmPassword" placeholder="አዲሱን password ድገመው ያስገቡ..." required>
+            </div>
+
+            <button type="submit" class="btn-change-pass">የይለፍ ቃል ቀይር (Update Password)</button>
+        </form>
+
+        <!-- መልእክት ማሳያ (ስኬት ወይም ስህተት) -->
+        <div id="statusMessage" class="status-msg"></div>
+    </div>
+</div>
+
+
+
+  
+</section>
+
+<!-- Teacher Modal -->
+<div id="teacherModal" class="ux-modal" onclick="if(event.target===this)closeUxModal('teacherModal')"><div class="ux-modal-box">
+  <div class="ux-modal-head"><h3><i class="fas fa-chalkboard-user"></i> Add Teacher</h3><button class="ux-close" onclick="closeUxModal('teacherModal')"><i class="fas fa-times"></i></button></div>
+  <form class="ux-form" onsubmit="saveTeacher(event)">
+    <div><label>Full Name *</label><input id="teacherName" required></div><div><label>Teacher ID *</label><input id="teacherId" required></div>
+    <div><label>Subject</label><input id="teacherSubject" placeholder="Mathematics"></div><div><label>Class / Grade</label><input id="teacherClass" placeholder="Grade 8"></div>
+    <div><label>Phone</label><input id="teacherPhone"></div><div><label>Salary (ETB)</label><input id="teacherSalary" type="number" min="0"></div>
+    <div><label>Status</label><select id="teacherStatusInput"><option>Active</option><option>On Leave</option><option>Inactive</option></select></div>
+    <div class="ux-form-actions"><button type="button" class="btn btn-light" onclick="closeUxModal('teacherModal')">Cancel</button><button class="btn btn-primary"><i class="fas fa-save"></i> Save Teacher</button></div>
+  </form>
+</div></div>
+
+<!-- Result Modal -->
+<div id="resultModal" class="ux-modal" onclick="if(event.target===this)closeUxModal('resultModal')"><div class="ux-modal-box">
+  <div class="ux-modal-head"><h3><i class="fas fa-graduation-cap"></i> Add Exam Result</h3><button class="ux-close" onclick="closeUxModal('resultModal')"><i class="fas fa-times"></i></button></div>
+  <form class="ux-form" onsubmit="saveResult(event)">
+    <div><label>Student Name *</label><input id="resultStudent" required></div><div><label>Student ID</label><input id="resultStudentId"></div>
+    <div><label>Grade</label><input id="resultGrade" placeholder="Grade 8"></div><div><label>Subject *</label><input id="resultSubject" required></div>
+    <div><label>Exam</label><input id="resultExam" value="Final Exam"></div><div><label>Mark / 100 *</label><input id="resultMark" type="number" min="0" max="100" step="0.01" required></div>
+    <div class="ux-form-actions"><button type="button" class="btn btn-light" onclick="closeUxModal('resultModal')">Cancel</button><button class="btn btn-primary"><i class="fas fa-save"></i> Save Result</button></div>
+  </form>
+</div></div>
+
+<!-- Receipt Modal -->
+<div id="receiptModal" class="ux-modal" onclick="if(event.target===this)closeUxModal('receiptModal')"><div class="ux-modal-box">
+  <div class="ux-modal-head"><h3><i class="fas fa-receipt"></i> New Receipt</h3><button class="ux-close" onclick="closeUxModal('receiptModal')"><i class="fas fa-times"></i></button></div>
+  <form class="ux-form" onsubmit="saveReceipt(event)">
+    <div><label>Student / Payer *</label><input id="receiptStudent" required></div><div><label>Student ID</label><input id="receiptStudentId"></div>
+    <div><label>Category</label><select id="receiptCategory"><option>Student Tuition</option><option>Registration Fee</option><option>Transport Fee</option><option>Other Income</option></select></div>
+    <div><label>Amount (ETB) *</label><input id="receiptAmount" type="number" min="0" step="0.01" required></div>
+    <div><label>Payment Method</label><select id="receiptPayment"><option>Cash</option><option>Bank Transfer</option><option>Telebirr</option><option>Card</option><option>Other</option></select></div>
+    <div><label>Date</label><input id="receiptDate" type="date" required></div>
+    <div class="full"><label>Description</label><textarea id="receiptDescription" rows="2"></textarea></div>
+    <div class="ux-form-actions"><button type="button" class="btn btn-light" onclick="closeUxModal('receiptModal')">Cancel</button><button class="btn btn-primary"><i class="fas fa-save"></i> Create Receipt</button></div>
+  </form>
+</div></div>
+
+</main>
+
+
+<!-- =========================================================
+NEWS MODAL
+========================================================= -->
+
+<div
+    id="addNewsModal"
+    class="modal">
+
+    <div class="modal-content">
+
+        <h3
+            style="
+                margin-bottom:20px;
+                font-family:'Outfit',sans-serif;
+            ">
+
+            <i
+                class="fas fa-bullhorn"
+                style="color:#d97706;">
+            </i>
+
+            Add Announcement
+
+        </h3>
+
+
+        <form onsubmit="handleCreateNews(event)">
+
+            <div class="form-group">
+
+                <label>
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    id="newsTitleInput"
+                    required>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div
+                    class="form-group"
+                    style="flex:1;">
+
+                    <label>
+                        Day (DD)
+                    </label>
+
+                    <input
+                        type="text"
+                        id="newsDayInput"
+                        placeholder="e.g. 15"
+                        required>
+
+                </div>
+
+
+                <div
+                    class="form-group"
+                    style="flex:1;">
+
+                    <label>
+                        Month (MMM)
+                    </label>
+
+                    <input
+                        type="text"
+                        id="newsMonthInput"
+                        placeholder="e.g. SEP"
+                        required>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    id="newsDescInput"
+                    rows="4"
+                    required>
+                </textarea>
+
+            </div>
+
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:flex-end;
+                    gap:10px;
+                ">
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    onclick="closeModal('addNewsModal')">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    <i class="fas fa-paper-plane"></i>
+
+                    Publish
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+FINANCE MODAL
+========================================================= -->
+
+<div
+    id="financeModal"
+    class="modal">
+
+    <div class="modal-content">
+
+        <h3
+            id="financeModalTitle"
+            style="
+                margin-bottom:20px;
+                font-family:'Outfit',sans-serif;
+            ">
+
+            Add Financial Transaction
+
+        </h3>
+
+
+        <form onsubmit="handleFinanceSubmit(event)">
+
+            <input
+                type="hidden"
+                id="financeTransactionType">
+
+
+            <div class="form-group">
+
+                <label>
+                    Amount (ETB)
+                </label>
+
+                <input
+                    type="number"
+                    id="financeAmount"
+                    min="0"
+                    step="0.01"
+                    placeholder="e.g. 50000"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="financeDate"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Category
+                </label>
+
+                <select
+                    id="financeCategory"
+                    required>
+
+                    <option value="">
+                        Select Category
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    id="financeDescription"
+                    rows="3"
+                    placeholder="Describe the transaction..."
+                    required></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Payment Method
+                </label>
+
+                <select id="financePaymentMethod">
+
+                    <option>Cash</option>
+                    <option>Bank Transfer</option>
+                    <option>Telebirr</option>
+                    <option>Card</option>
+                    <option>Other</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label id="financePersonLabel">
+                    Student / Recipient
+                </label>
+
+                <input
+                    type="text"
+                    id="financePerson"
+                    placeholder="Name or ID">
+
+            </div>
+
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:flex-end;
+                    gap:10px;
+                ">
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    onclick="closeModal('financeModal')">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    <i class="fas fa-save"></i>
+
+                    Save Transaction
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+TOAST
+========================================================= -->
+
+<div
+    id="toast"
+    class="toast">
+
+    Action completed successfully
+
+</div>
+
+
+<script>
+
+/* =========================================================
+API
+========================================================= */
+
+const API_BASE_URL =
+'https://wisdomlandapi.onrender.com/api';
+
+
+/* =========================================================
+GEMINI
+========================================================= */
+
+/*
+IMPORTANT:
+The API key previously pasted into the frontend is exposed.
+
+REVOKE/DELETE the old key and create a new one.
+
+For testing only:
+*/
+
+const GEMINI_API_KEY =
+'AQ.Ab8RN6KusJwJzAJTbwIUk6T92AzuMcCYtIY4tSwOJARJLnIF3Q';
+
+const GEMINI_API_URL =
+'https://generativelanguage.googleapis.com/v1beta/interactions';
+
+const GEMINI_MODEL =
+'gemini-3.6-flash';
+
+
+/* =========================================================
+DATA
+========================================================= */
+
+let admissions=[];
+let newsList=[];
+let messages=[];
+let students=[];
+
+let financeTransactions=[];
+
+let incomeExpenseChart=null;
+let trendChart=null;
+let expenseCategoryChart=null;
+let incomeSourceChart=null;
+
+const FINANCE_STORAGE_KEY =
+'wisdomland_finance_transactions';
+
+
+/* =========================================================
+SIDEBAR
+========================================================= */
+
+function toggleSidebar(){
+
+    document
+    .getElementById('sidebar')
+    .classList.toggle('active');
+
+    document
+    .getElementById('sidebarOverlay')
+    .classList.toggle('active');
+
+}
+
+
+function switchTab(tabId,element){
+
+    document
+    .querySelectorAll('.dashboard-section')
+    .forEach(el=>{
+        el.classList.remove('active');
+    });
+
+
+    document
+    .querySelectorAll('.sidebar-menu li')
+    .forEach(el=>{
+        el.classList.remove('active');
+    });
+
+
+    const section=
+    document.getElementById(tabId);
+
+    if(section){
+        section.classList.add('active');
+    }
+
+
+    if(element){
+
+        element.parentElement
+        .classList.add('active');
+
+    }
+
+
+    if(window.innerWidth<=768){
+
+        document
+        .getElementById('sidebar')
+        .classList.remove('active');
+
+        document
+        .getElementById('sidebarOverlay')
+        .classList.remove('active');
+
+    }
+
+}
+
+
+/* =========================================================
+MODALS
+========================================================= */
+
+function openModal(id){
+
+    document
+    .getElementById(id)
+    .classList.add('active');
+
+}
+
+
+function closeModal(id){
+
+    document
+    .getElementById(id)
+    .classList.remove('active');
+
+}
+
+
+/* Close modal by clicking outside */
+
+document.addEventListener('click',function(e){
+
+    if(e.target.classList.contains('modal')){
+
+        e.target.classList.remove('active');
+
+    }
+
+});
+
+
+/* =========================================================
+TOAST
+========================================================= */
+
+let toastTimer=null;
+
+function showToast(msg,type='info'){
+
+    const toast=
+    document.getElementById('toast');
+
+    toast.innerText=msg;
+
+    toast.style.background=
+        type==='success'
+        ?'linear-gradient(135deg,#059669,#10b981)'
+        :type==='danger'
+        ?'linear-gradient(135deg,#dc2626,#ef4444)'
+        :'linear-gradient(135deg,#0f172a,#1e3a8a)';
+
+    toast.style.display='block';
+
+    clearTimeout(toastTimer);
+
+    toastTimer=
+    setTimeout(()=>{
+
+        toast.style.display='none';
+
+    },3000);
+
+}
+
+
+/* =========================================================
+STUDENTS API
+========================================================= */
+
+async function fetchRegisteredStudents(){
+
+    try{
+
+        const response=
+        await fetch(
+            `${API_BASE_URL}/register-student`
+        );
+
+        if(response.ok){
+
+            students=
+            await response.json();
+
+            renderStudents();
+
+        }
+
+    }catch(error){
+
+        console.error(
+            'Error fetching registered students:',
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+ADMIN API
+========================================================= */
+
+async function fetchAdminData(){
+
+    try{
+
+        const [
+            newsRes,
+            msgRes,
+            admissionsRes
+        ]=
+        await Promise.all([
+
+            fetch(`${API_BASE_URL}/news`)
+            .catch(()=>null),
+
+            fetch(`${API_BASE_URL}/messages`)
+            .catch(()=>null),
+
+            fetch(`${API_BASE_URL}/admissions`)
+            .catch(()=>null)
+
+        ]);
+
+
+        if(newsRes && newsRes.ok)
+            newsList=await newsRes.json();
+
+
+        if(msgRes && msgRes.ok)
+            messages=await msgRes.json();
+
+
+        if(admissionsRes && admissionsRes.ok)
+            admissions=await admissionsRes.json();
+
+
+        renderDashboard();
+        renderNews();
+        renderMessages();
+        renderAdmissions();
+
+
+    }catch(error){
+
+        console.error(
+            'Error fetching data from API:',
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+NEWS
+========================================================= */
+
+async function handleCreateNews(e){
+
+    e.preventDefault();
+
+    const payload={
+
+        title:
+        document
+        .getElementById('newsTitleInput')
+        .value
+        .trim(),
+
+        day:
+        document
+        .getElementById('newsDayInput')
+        .value
+        .trim(),
+
+        month:
+        document
+        .getElementById('newsMonthInput')
+        .value
+        .trim(),
+
+        desc:
+        document
+        .getElementById('newsDescInput')
+        .value
+        .trim()
+
+    };
+
+
+    try{
+
+        const response=
+        await fetch(
+            `${API_BASE_URL}/news`,
+            {
+
+                method:'POST',
+
+                headers:{
+                    'Content-Type':
+                    'application/json'
+                },
+
+                body:
+                JSON.stringify(payload)
+
+            }
+        );
+
+
+        if(response.ok){
+
+            await fetchAdminData();
+
+            closeModal('addNewsModal');
+
+            showToast(
+                'Announcement published successfully',
+                'success'
+            );
+
+            e.target.reset();
+
+        }else{
+
+            showToast(
+                'Unable to publish announcement',
+                'danger'
+            );
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            'Server connection error',
+            'danger'
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+DELETE NEWS
+========================================================= */
+
+async function deleteNews(id){
+
+    if(
+        !confirm(
+            'Are you sure you want to delete this announcement?'
+        )
+    )return;
+
+
+    try{
+
+        const response=
+        await fetch(
+            `${API_BASE_URL}/news/${id}`,
+            {
+                method:'DELETE'
+            }
+        );
+
+
+        if(response.ok){
+
+            await fetchAdminData();
+
+            showToast(
+                'Announcement deleted',
+                'success'
+            );
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            'Unable to delete announcement',
+            'danger'
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+ADMISSIONS
+========================================================= */
+
+async function updateStatus(id,newStatus){
+
+    try{
+
+        const response=
+        await fetch(
+            `${API_BASE_URL}/admissions/${id}`,
+            {
+
+                method:'PATCH',
+
+                headers:{
+                    'Content-Type':
+                    'application/json'
+                },
+
+                body:
+                JSON.stringify({
+                    status:newStatus
+                })
+
+            }
+        );
+
+
+        if(response.ok){
+
+            await fetchAdminData();
+
+            showToast(
+                `Application ${id} marked as ${newStatus}`,
+                'success'
+            );
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            'Unable to update application',
+            'danger'
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+DASHBOARD
+========================================================= */
+
+function renderDashboard(){
+
+    document.getElementById(
+        'statTotalAdmissions'
+    ).innerText=
+        admissions.length;
+
+
+    document.getElementById(
+        'statPending'
+    ).innerText=
+        admissions.filter(
+            a=>a.status==='Pending'
+        ).length;
+
+
+    document.getElementById(
+        'statApproved'
+    ).innerText=
+        admissions.filter(
+            a=>a.status==='Approved'
+        ).length;
+
+
+    const dashNoticeList=
+        document.getElementById(
+            'dashNoticeList'
+        );
+
+
+    if(!newsList.length){
+
+        dashNoticeList.innerHTML=`
+
+            <div class="news-item">
+
+                <div class="news-date">
+                    NEWS
+                </div>
+
+                <h4>
+                    No announcements yet
+                </h4>
+
+                <p>
+                    Add your first school announcement
+                    from the Announcements section.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    dashNoticeList.innerHTML=
+    newsList
+    .slice(0,3)
+    .map((item,index)=>`
+
+        <div class="news-item">
+
+            <img
+                class="news-image"
+                src="${
+                    index===0
+                    ?'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=900&q=80'
+                    :'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80'
+                }"
+                alt="WisdomLand School"
+                onerror="this.style.display='none';">
+
+            <div class="news-date">
+
+                ${escapeHTML(item.month||'')}
+                ${escapeHTML(item.day||'')}
+
+            </div>
+
+            <h4>
+                ${escapeHTML(item.title||'')}
+            </h4>
+
+            <p>
+                ${escapeHTML(item.desc||'')}
+            </p>
+
+        </div>
+
+    `)
+    .join('');
+
+}
+
+
+/* =========================================================
+ADMISSIONS TABLE
+========================================================= */
+
+function renderAdmissions(){
+
+    const tbody=
+        document.getElementById(
+            'admissionsTableBody'
+        );
+
+
+    if(admissions.length===0){
+
+        tbody.innerHTML=`
+
+            <tr>
+
+                <td
+                    colspan="7"
+                    style="
+                        text-align:center;
+                        color:var(--text-muted);
+                        padding:30px;
+                    ">
+
+                    <i
+                        class="fas fa-folder-open"
+                        style="
+                            font-size:28px;
+                            margin-bottom:10px;
+                        ">
+                    </i>
+
+                    <br>
+
+                    No admissions submitted yet.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    tbody.innerHTML=
+    admissions
+    .map(item=>`
+
+        <tr>
+
+            <td>
+                <strong>
+                    ${escapeHTML(item.id||'')}
+                </strong>
+            </td>
+
+            <td>
+                ${escapeHTML(item.name||'')}
+            </td>
+
+            <td>
+                ${escapeHTML(item.grade||'')}
+            </td>
+
+            <td>
+                ${escapeHTML(item.phone||'')}
+            </td>
+
+            <td>
+                ${escapeHTML(item.date||'')}
+            </td>
+
+            <td>
+
+                <span
+                    class="
+                        status-badge
+                        status-${String(
+                            item.status||''
+                        ).toLowerCase()}
+                    ">
+
+                    ${escapeHTML(
+                        item.status||''
+                    )}
+
+                </span>
+
+            </td>
+
+            <td>
+
+                ${
+                    item.status==='Pending'
+                    ?`
+
+                        <button
+                            class="btn btn-primary"
+                            style="
+                                padding:6px 9px;
+                                font-size:.68rem;
+                            "
+                            onclick="
+                                updateStatus(
+                                    '${String(item.id||'')
+                                    .replace(/'/g,"\\'")}',
+                                    'Approved'
+                                )
+                            ">
+
+                            <i class="fas fa-check"></i>
+
+                            Approve
+
+                        </button>
+
+                    `
+                    :`
+                        <span
+                            style="
+                                color:#10b981;
+                                font-weight:800;
+                                font-size:.72rem;
+                            ">
+
+                            <i class="fas fa-check-circle"></i>
+
+                            Approved
+
+                        </span>
+                    `
+                }
+
+            </td>
+
+        </tr>
+
+    `)
+    .join('');
+
+}
+
+
+/* =========================================================
+STUDENTS TABLE
+========================================================= */
+
+function renderStudents(){
+
+    const tbody=
+        document.getElementById(
+            'studentsTableBody'
+        );
+
+
+    if(!students || students.length===0){
+
+        tbody.innerHTML=`
+
+            <tr>
+
+                <td
+                    colspan="7"
+                    style="
+                        text-align:center;
+                        color:var(--text-muted);
+                        padding:30px;
+                    ">
+
+                    <i
+                        class="fas fa-user-graduate"
+                        style="
+                            font-size:28px;
+                            margin-bottom:10px;
+                        ">
+                    </i>
+
+                    <br>
+
+                    No registered students found.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    tbody.innerHTML=
+    students
+    .map(s=>`
+
+        <tr>
+
+            <td>
+                <strong>
+                    ${escapeHTML(s.id||'')}
+                </strong>
+            </td>
+
+            <td>
+                ${
+                    escapeHTML(
+                        s.fullName ||
+                        (
+                            (s.firstName||'')+
+                            ' '+
+                            (s.fatherName||'')
+                        )
+                    )
+                }
+            </td>
+
+            <td>
+                ${escapeHTML(s.email||'')}
+            </td>
+
+            <td>
+                ${escapeHTML(s.phone||'')}
+            </td>
+
+            <td>
+                ${escapeHTML(s.guardianName||'')}
+                ${
+                    s.guardianPhone
+                    ?` (${escapeHTML(s.guardianPhone)})`
+                    :''
+                }
+            </td>
+
+            <td>
+                ${escapeHTML(s.address||'')}
+            </td>
+
+            <td>
+                ${escapeHTML(s.registeredAt||'')}
+            </td>
+
+        </tr>
+
+    `)
+    .join('');
+
+}
+
+
+/* =========================================================
+NEWS
+========================================================= */
+
+function renderNews(){
+
+    const newsGrid=
+        document.getElementById(
+            'newsGrid'
+        );
+
+
+    if(!newsList.length){
+
+        newsGrid.innerHTML=`
+
+            <div class="news-item">
+
+                <div class="news-date">
+                    NEWS
+                </div>
+
+                <h4>
+                    No announcements
+                </h4>
+
+                <p>
+                    No announcements have been published yet.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    newsGrid.innerHTML=
+    newsList
+    .map((item,index)=>`
+
+        <div class="news-item">
+
+            <button
+                class="delete-btn"
+                onclick="
+                    deleteNews(
+                        ${Number(item.id)||0}
+                    )
+                ">
+
+                <i class="fas fa-trash"></i>
+
+            </button>
+
+
+            <img
+                class="news-image"
+                src="${
+                    index%2===0
+                    ?'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=900&q=80'
+                    :'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=900&q=80'
+                }"
+                alt="School announcement"
+                onerror="this.style.display='none';">
+
+
+            <div class="news-date">
+
+                ${escapeHTML(item.month||'')}
+                ${escapeHTML(item.day||'')}
+
+            </div>
+
+
+            <h4>
+                ${escapeHTML(item.title||'')}
+            </h4>
+
+
+            <p>
+                ${escapeHTML(item.desc||'')}
+            </p>
+
+        </div>
+
+    `)
+    .join('');
+
+}
+
+
+/* =========================================================
+MESSAGES
+========================================================= */
+
+function renderMessages(){
+
+    const messageList=
+        document.getElementById(
+            'messageList'
+        );
+
+
+    if(messages.length===0){
+
+        messageList.innerHTML=`
+
+            <div
+                style="
+                    text-align:center;
+                    padding:35px;
+                    color:var(--text-muted);
+                ">
+
+                <i
+                    class="fas fa-envelope-open"
+                    style="
+                        font-size:32px;
+                        margin-bottom:10px;
+                    ">
+                </i>
+
+                <br>
+
+                No messages found.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    messageList.innerHTML=
+    messages
+    .map(msg=>`
+
+        <div class="message-card">
+
+            <div class="message-top">
+
+                <strong style="font-size:.8rem;">
+
+                    ${escapeHTML(msg.sender||'')}
+
+                    <span class="message-email">
+                        (${escapeHTML(msg.email||'')})
+                    </span>
+
+                </strong>
+
+                <span class="message-date">
+                    ${escapeHTML(msg.date||'Recently')}
+                </span>
+
+            </div>
+
+
+            <div class="message-subject">
+
+                ${escapeHTML(
+                    msg.subject||'No Subject'
+                )}
+
+            </div>
+
+
+            <div class="message-body">
+
+                ${escapeHTML(
+                    msg.body||''
+                )}
+
+            </div>
+
+        </div>
+
+    `)
+    .join('');
+
+}
+
+
+/* =========================================================
+FINANCE LOAD
+========================================================= */
+
+function loadFinance(){
+
+    try{
+
+        const savedFinance=
+            localStorage.getItem(
+                FINANCE_STORAGE_KEY
+            );
+
+
+        if(savedFinance){
+
+            const parsed=
+                JSON.parse(savedFinance);
+
+            financeTransactions=
+                Array.isArray(parsed)
+                ?parsed
+                :[];
+
+        }else{
+
+            financeTransactions=[];
+
+        }
+
+    }catch(error){
+
+        console.error(
+            'Finance LocalStorage Load Error:',
+            error
+        );
+
+        financeTransactions=[];
+
+    }
+
+
+    renderFinance();
+
+}
+
+
+/* =========================================================
+FINANCE MODAL
+========================================================= */
+
+function openFinanceModal(type){
+
+    type=
+        String(type).toLowerCase()==='income'
+        ?'Income'
+        :'Expense';
+
+
+    document
+    .getElementById('financeModal')
+    .classList.add('active');
+
+
+    document
+    .getElementById('financeTransactionType')
+    .value=type;
+
+
+    document
+    .getElementById('financeModalTitle')
+    .innerText=
+        type==='Income'
+        ?'Add Income'
+        :'Add Expense';
+
+
+    const category=
+        document.getElementById(
+            'financeCategory'
+        );
+
+
+    category.innerHTML=
+        type==='Income'
+        ?`
+
+            <option value="">
+                Select Income Category
+            </option>
+
+            <option>Student Tuition</option>
+            <option>Registration Fee</option>
+            <option>Transport Fee</option>
+            <option>Other Income</option>
+
+        `
+        :`
+
+            <option value="">
+                Select Expense Category
+            </option>
+
+            <option>Teacher Salary</option>
+            <option>Staff Salary</option>
+            <option>Rent</option>
+            <option>Electricity</option>
+            <option>Water</option>
+            <option>Internet</option>
+            <option>School Supplies</option>
+            <option>Books</option>
+            <option>Maintenance</option>
+            <option>Transport</option>
+            <option>Other Expense</option>
+
+        `;
+
+
+    document
+    .getElementById('financeDate')
+    .value=
+        new Date()
+        .toISOString()
+        .split('T')[0];
+
+
+    document
+    .getElementById('financePersonLabel')
+    .innerText=
+        type==='Income'
+        ?'Student / Payer'
+        :'Recipient';
+
+}
+
+
+/* =========================================================
+SAVE FINANCE
+========================================================= */
+
+function handleFinanceSubmit(e){
+
+    e.preventDefault();
+
+
+    const type=
+        document
+        .getElementById(
+            'financeTransactionType'
+        )
+        .value;
+
+
+    const payload={
+
+        id:
+        'FIN-' + Date.now(),
+
+        type:type,
+
+        amount:
+        Number(
+            document
+            .getElementById(
+                'financeAmount'
+            )
+            .value
+        ),
+
+        date:
+        document
+        .getElementById(
+            'financeDate'
+        )
+        .value,
+
+        category:
+        document
+        .getElementById(
+            'financeCategory'
+        )
+        .value,
+
+        description:
+        document
+        .getElementById(
+            'financeDescription'
+        )
+        .value
+        .trim(),
+
+        paymentMethod:
+        document
+        .getElementById(
+            'financePaymentMethod'
+        )
+        .value,
+
+        person:
+        document
+        .getElementById(
+            'financePerson'
+        )
+        .value
+        .trim(),
+
+        recordedBy:
+        'WisdomLand Admin',
+
+        createdAt:
+        new Date().toISOString()
+
+    };
+
+
+    try{
+
+        const saved=
+            localStorage.getItem(
+                FINANCE_STORAGE_KEY
+            );
+
+
+        let transactions=[];
+
+
+        if(saved){
+
+            try{
+
+                transactions=
+                    JSON.parse(saved);
+
+                if(!Array.isArray(transactions)){
+                    transactions=[];
+                }
+
+            }catch(error){
+
+                transactions=[];
+
+            }
+
+        }
+
+
+        transactions.unshift(payload);
+
+
+        localStorage.setItem(
+            FINANCE_STORAGE_KEY,
+            JSON.stringify(
+                transactions
+            )
+        );
+
+
+        financeTransactions=
+            transactions;
+
+
+        renderFinance();
+
+
+        closeModal('financeModal');
+
+        e.target.reset();
+
+
+        showToast(
+            `${type} saved successfully`,
+            'success'
+        );
+
+
+    }catch(error){
+
+        console.error(
+            'Finance LocalStorage Save Error:',
+            error
+        );
+
+        showToast(
+            'Unable to save finance transaction',
+            'danger'
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+DELETE FINANCE
+========================================================= */
+
+function deleteFinance(id){
+
+    if(
+        !confirm(
+            'Are you sure you want to delete this transaction?'
+        )
+    )return;
+
+
+    try{
+
+        financeTransactions=
+            financeTransactions.filter(
+                transaction=>
+                    String(transaction.id)!==
+                    String(id)
+            );
+
+
+        localStorage.setItem(
+            FINANCE_STORAGE_KEY,
+            JSON.stringify(
+                financeTransactions
+            )
+        );
+
+
+        renderFinance();
+
+
+        showToast(
+            'Transaction deleted',
+            'success'
+        );
+
+
+    }catch(error){
+
+        console.error(
+            'Finance LocalStorage Delete Error:',
+            error
+        );
+
+        showToast(
+            'Could not delete transaction',
+            'danger'
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+FILTER
+========================================================= */
+
+function getFilteredFinance(){
+
+    let data=[
+        ...financeTransactions
+    ];
+
+
+    const from=
+        document
+        .getElementById(
+            'financeDateFrom'
+        )
+        .value;
+
+
+    const to=
+        document
+        .getElementById(
+            'financeDateTo'
+        )
+        .value;
+
+
+    const type=
+        document
+        .getElementById(
+            'financeTypeFilter'
+        )
+        .value;
+
+
+    const category=
+        document
+        .getElementById(
+            'financeCategoryFilter'
+        )
+        .value;
+
+
+    const search=
+        document
+        .getElementById(
+            'financeSearch'
+        )
+        .value
+        .toLowerCase();
+
+
+    if(from){
+
+        data=
+            data.filter(
+                x=>
+                    String(x.date||'')>=from
+            );
+
+    }
+
+
+    if(to){
+
+        data=
+            data.filter(
+                x=>
+                    String(x.date||'')<=to
+            );
+
+    }
+
+
+    if(type){
+
+        data=
+            data.filter(
+                x=>
+                    String(x.type)
+                    .toLowerCase()
+                    ===
+                    String(type)
+                    .toLowerCase()
+            );
+
+    }
+
+
+    if(category){
+
+        data=
+            data.filter(
+                x=>
+                    x.category===category
+            );
+
+    }
+
+
+    if(search){
+
+        data=
+            data.filter(
+                x=>
+                    JSON.stringify(x)
+                    .toLowerCase()
+                    .includes(search)
+            );
+
+    }
+
+
+    return data;
+
+}
+
+
+/* =========================================================
+FINANCE RENDER
+========================================================= */
+
+function renderFinance(){
+
+    const data=
+        getFilteredFinance();
+
+
+    let income=0;
+    let expense=0;
+
+
+    data.forEach(t=>{
+
+        const amount=
+            Number(t.amount)||0;
+
+
+        if(
+            String(t.type)
+            .toLowerCase()
+            ==='income'
+        ){
+
+            income+=amount;
+
+        }else{
+
+            expense+=amount;
+
+        }
+
+    });
+
+
+    const balance=
+        income-expense;
+
+
+    const margin=
+        income>0
+        ?(balance/income)*100
+        :0;
+
+
+    document.getElementById(
+        'financeTotalIncome'
+    ).innerText=
+        formatMoney(income);
+
+
+    document.getElementById(
+        'financeTotalExpense'
+    ).innerText=
+        formatMoney(expense);
+
+
+    document.getElementById(
+        'financeBalance'
+    ).innerText=
+        formatMoney(balance);
+
+
+    document.getElementById(
+        'financeProfitMargin'
+    ).innerText=
+        margin.toFixed(1)+'%';
+
+
+    document.getElementById(
+        'financeTransactions'
+    ).innerText=
+        data.length;
+
+
+    renderFinanceTable(data);
+
+    updateFinanceCharts(data);
+
+    generateFinanceAlerts(
+        income,
+        expense,
+        balance
+    );
+
+}
+
+
+/* =========================================================
+MONEY
+========================================================= */
+
+function formatMoney(value){
+
+    return new Intl.NumberFormat(
+        'en-US',
+        {
+            maximumFractionDigits:2
+        }
+    ).format(value)+' ETB';
+
+}
+
+
+/* =========================================================
+FINANCE TABLE
+========================================================= */
+
+function renderFinanceTable(data){
+
+    const tbody=
+        document.getElementById(
+            'financeTableBody'
+        );
+
+
+    if(!data.length){
+
+        tbody.innerHTML=`
+
+            <tr>
+
+                <td
+                    colspan="9"
+                    style="
+                        text-align:center;
+                        color:var(--text-muted);
+                        padding:35px;
+                    ">
+
+                    <i
+                        class="fas fa-wallet"
+                        style="
+                            font-size:30px;
+                            margin-bottom:10px;
+                        ">
+                    </i>
+
+                    <br>
+
+                    No financial transactions found.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    tbody.innerHTML=
+    data
+    .map(t=>{
+
+        const isIncome=
+            String(t.type)
+            .toLowerCase()
+            ==='income';
+
+
+        return `
+
+            <tr>
+
+                <td>
+                    <strong>
+                        ${escapeHTML(t.id||'-')}
+                    </strong>
+                </td>
+
+                <td>
+                    ${escapeHTML(t.date||'-')}
+                </td>
+
+                <td>
+
+                    <span
+                        class="status-badge"
+                        style="
+                            background:
+                            ${
+                                isIncome
+                                ?'#d1fae5'
+                                :'#fee2e2'
+                            };
+
+                            color:
+                            ${
+                                isIncome
+                                ?'#059669'
+                                :'#dc2626'
+                            };
+                        ">
+
+                        ${escapeHTML(t.type||'-')}
+
+                    </span>
+
+                </td>
+
+                <td>
+                    ${escapeHTML(t.category||'-')}
+                </td>
+
+                <td>
+                    ${escapeHTML(t.description||'-')}
+                </td>
+
+                <td>
+
+                    <strong
+                        style="
+                            color:
+                            ${
+                                isIncome
+                                ?'#059669'
+                                :'#dc2626'
+                            };
+                        ">
+
+                        ${isIncome?'+':'-'}
+
+                        ${formatMoney(
+                            Number(t.amount)||0
+                        )}
+
+                    </strong>
+
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        t.paymentMethod||'-'
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        t.recordedBy||'Admin'
+                    )}
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn btn-danger"
+                        style="
+                            padding:6px 8px;
+                            font-size:.7rem;
+                        "
+                        onclick="
+                            deleteFinance(
+                                '${String(t.id)
+                                .replace(/'/g,"\\'")}'
+                            )
+                        ">
+
+                        <i class="fas fa-trash"></i>
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    })
+    .join('');
+
+}
+
+
+/* =========================================================
+CHARTS
+========================================================= */
+
+function updateFinanceCharts(data){
+
+    const months=[
+        'Jan','Feb','Mar','Apr','May','Jun',
+        'Jul','Aug','Sep','Oct','Nov','Dec'
+    ];
+
+
+    const incomeMonthly=
+        Array(12).fill(0);
+
+    const expenseMonthly=
+        Array(12).fill(0);
+
+    const expenseCategories={};
+    const incomeSources={};
+
+
+    data.forEach(t=>{
+
+        const amount=
+            Number(t.amount)||0;
+
+
+        const date=
+            new Date(t.date);
+
+
+        if(!isNaN(date)){
+
+            const month=
+                date.getMonth();
+
+
+            if(
+                String(t.type)
+                .toLowerCase()
+                ==='income'
+            ){
+
+                incomeMonthly[month]+=amount;
+
+            }else{
+
+                expenseMonthly[month]+=amount;
+
+            }
+
+        }
+
+
+        if(
+            String(t.type)
+            .toLowerCase()
+            ==='income'
+        ){
+
+            const cat=
+                t.category||'Other Income';
+
+            incomeSources[cat]=
+                (incomeSources[cat]||0)+amount;
+
+        }else{
+
+            const cat=
+                t.category||'Other Expense';
+
+            expenseCategories[cat]=
+                (expenseCategories[cat]||0)+amount;
+
+        }
+
+    });
+
+
+    /* =====================================================
+    BAR
+    ===================================================== */
+
+    if(incomeExpenseChart)
+        incomeExpenseChart.destroy();
+
+
+    incomeExpenseChart=
+        new Chart(
+            document.getElementById(
+                'incomeExpenseChart'
+            ),
+            {
+
+                type:'bar',
+
+                data:{
+
+                    labels:months,
+
+                    datasets:[
+
+                        {
+                            label:'Income',
+                            data:incomeMonthly,
+                            borderRadius:7
+                        },
+
+                        {
+                            label:'Expenses',
+                            data:expenseMonthly,
+                            borderRadius:7
+                        }
+
+                    ]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    interaction:{
+                        intersect:false,
+                        mode:'index'
+                    },
+
+                    plugins:{
+                        legend:{
+                            position:'top'
+                        }
+                    },
+
+                    scales:{
+                        y:{
+                            beginAtZero:true,
+                            grid:{
+                                color:'rgba(148,163,184,.15)'
+                            }
+                        },
+
+                        x:{
+                            grid:{
+                                display:false
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    /* =====================================================
+    TREND
+    ===================================================== */
+
+    if(trendChart)
+        trendChart.destroy();
+
+
+    let runningBalance=0;
+
+
+    const balanceData=
+        months.map((m,i)=>{
+
+            runningBalance+=
+                incomeMonthly[i]-
+                expenseMonthly[i];
+
+            return runningBalance;
+
+        });
+
+
+    trendChart=
+        new Chart(
+            document.getElementById(
+                'trendChart'
+            ),
+            {
+
+                type:'line',
+
+                data:{
+
+                    labels:months,
+
+                    datasets:[
+
+                        {
+                            label:'Balance Trend',
+                            data:balanceData,
+                            fill:true,
+                            tension:.35
+                        }
+
+                    ]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    plugins:{
+                        legend:{
+                            position:'top'
+                        }
+                    },
+
+                    scales:{
+                        y:{
+                            beginAtZero:false
+                        }
+                    }
+
+                }
+
+            }
+        );
+
+
+    /* =====================================================
+    EXPENSE
+    ===================================================== */
+
+    if(expenseCategoryChart)
+        expenseCategoryChart.destroy();
+
+
+    expenseCategoryChart=
+        new Chart(
+            document.getElementById(
+                'expenseCategoryChart'
+            ),
+            {
+
+                type:'doughnut',
+
+                data:{
+
+                    labels:
+                        Object.keys(
+                            expenseCategories
+                        ),
+
+                    datasets:[
+
+                        {
+                            data:
+                                Object.values(
+                                    expenseCategories
+                                ),
+
+                            borderWidth:3,
+                            borderColor:'#ffffff'
+                        }
+
+                    ]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    cutout:'62%',
+
+                    plugins:{
+                        legend:{
+                            position:'bottom'
+                        }
+                    }
+
+                }
+
+            }
+        );
+
+
+    /* =====================================================
+    INCOME
+    ===================================================== */
+
+    if(incomeSourceChart)
+        incomeSourceChart.destroy();
+
+
+    incomeSourceChart=
+        new Chart(
+            document.getElementById(
+                'incomeSourceChart'
+            ),
+            {
+
+                type:'doughnut',
+
+                data:{
+
+                    labels:
+                        Object.keys(
+                            incomeSources
+                        ),
+
+                    datasets:[
+
+                        {
+                            data:
+                                Object.values(
+                                    incomeSources
+                                ),
+
+                            borderWidth:3,
+                            borderColor:'#ffffff'
+                        }
+
+                    ]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    cutout:'62%',
+
+                    plugins:{
+                        legend:{
+                            position:'bottom'
+                        }
+                    }
+
+                }
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+FINANCE ALERTS
+========================================================= */
+
+function generateFinanceAlerts(
+    income,
+    expense,
+    balance
+){
+
+    const box=
+        document.getElementById(
+            'financeAlerts'
+        );
+
+
+    let html='';
+
+
+    if(income===0 && expense===0){
+
+        html+=`
+
+            <div class="finance-alert alert-warning">
+
+                <i class="fas fa-info-circle"></i>
+
+                <div>
+
+                    <strong>
+                        No financial data yet.
+                    </strong>
+
+                    <br>
+
+                    Add income and expenses
+                    to start financial analysis.
+
+                </div>
+
+            </div>
+
+        `;
+
+    }else if(expense>income){
+
+        html+=`
+
+            <div class="finance-alert alert-danger">
+
+                <i class="fas fa-triangle-exclamation"></i>
+
+                <div>
+
+                    <strong>
+                        Financial Warning
+                    </strong>
+
+                    <br>
+
+                    Expenses are currently
+                    higher than income.
+
+                    Review unnecessary expenses.
+
+                </div>
+
+            </div>
+
+        `;
+
+    }else{
+
+        html+=`
+
+            <div class="finance-alert alert-success">
+
+                <i class="fas fa-circle-check"></i>
+
+                <div>
+
+                    <strong>
+                        Financial Position Looks Healthy
+                    </strong>
+
+                    <br>
+
+                    Income is currently higher
+                    than expenses.
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    if(
+        income>0 &&
+        expense/income>=.7
+    ){
+
+        html+=`
+
+            <div class="finance-alert alert-warning">
+
+                <i class="fas fa-chart-pie"></i>
+
+                <div>
+
+                    <strong>
+                        High Expense Ratio
+                    </strong>
+
+                    <br>
+
+                    Expenses are more than 70%
+                    of income.
+
+                    Consider maintaining
+                    an emergency reserve.
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    box.innerHTML=html;
+
+}
+
+
+/* =========================================================
+GEMINI CONTEXT
+========================================================= */
+
+function buildGeminiFinanceContext(){
+
+    let income=0;
+    let expense=0;
+
+    const expenseCategories={};
+    const incomeCategories={};
+
+
+    const transactions=
+        financeTransactions.slice(0,200);
+
+
+    transactions.forEach(t=>{
+
+        const amount=
+            Number(t.amount)||0;
+
+
+        if(
+            String(t.type)
+            .toLowerCase()
+            ==='income'
+        ){
+
+            income+=amount;
+
+            const cat=
+                t.category||'Other Income';
+
+            incomeCategories[cat]=
+                (incomeCategories[cat]||0)+amount;
+
+        }else{
+
+            expense+=amount;
+
+            const cat=
+                t.category||'Other Expense';
+
+            expenseCategories[cat]=
+                (expenseCategories[cat]||0)+amount;
+
+        }
+
+    });
+
+
+    const balance=
+        income-expense;
+
+
+    const margin=
+        income>0
+        ?(balance/income)*100
+        :0;
+
+
+    return{
+
+        totalIncome:income,
+
+        totalExpense:expense,
+
+        balance:balance,
+
+        profitMargin:margin,
+
+        transactionCount:
+            financeTransactions.length,
+
+        incomeCategories,
+
+        expenseCategories,
+
+        transactions
+
+    };
+
+}
+
+
+/* =========================================================
+GEMINI API
+========================================================= */
+
+async function callGeminiAI(prompt){
+
+    if(
+        !GEMINI_API_KEY ||
+        GEMINI_API_KEY.includes(
+            'PASTE_NEW_GEMINI_API_KEY'
+        )
+    ){
+
+        throw new Error(
+            'Add your new Gemini API key in index.html first.'
+        );
+
+    }
+
+
+    const response=
+        await fetch(
+            GEMINI_API_URL,
+            {
+
+                method:'POST',
+
+                headers:{
+
+                    'Content-Type':
+                        'application/json',
+
+                    'x-goog-api-key':
+                        GEMINI_API_KEY
+
+                },
+
+                body:
+                    JSON.stringify({
+
+                        model:
+                            GEMINI_MODEL,
+
+                        input:
+                            prompt
+
+                    })
+
+            }
+        );
+
+
+    const data=
+        await response.json();
+
+
+    console.log(
+        'Gemini Response:',
+        data
+    );
+
+
+    if(!response.ok){
+
+        throw new Error(
+            data?.error?.message ||
+            `Gemini API Error ${response.status}`
+        );
+
+    }
+
+
+    if(
+        typeof data?.output_text==='string' &&
+        data.output_text.trim()
+    ){
+
+        return data.output_text.trim();
+
+    }
+
+
+    if(
+        Array.isArray(data?.outputs)
+    ){
+
+        const text=
+            data.outputs
+            .map(item=>{
+
+                if(
+                    typeof item?.text==='string'
+                )
+                    return item.text;
+
+
+                if(
+                    Array.isArray(
+                        item?.content
+                    )
+                ){
+
+                    return item.content
+                    .map(
+                        c=>c?.text||''
+                    )
+                    .join('');
+
+                }
+
+
+                return '';
+
+            })
+            .join('')
+            .trim();
+
+
+        if(text)
+            return text;
+
+    }
+
+
+    if(
+        Array.isArray(data?.steps)
+    ){
+
+        const text=
+            data.steps
+            .map(step=>{
+
+                if(
+                    Array.isArray(
+                        step?.content
+                    )
+                ){
+
+                    return step.content
+                    .map(
+                        c=>c?.text||''
+                    )
+                    .join('');
+
+                }
+
+                return '';
+
+            })
+            .join('')
+            .trim();
+
+
+        if(text)
+            return text;
+
+    }
+
+
+    throw new Error(
+        'Gemini returned an empty response.'
+    );
+
+}
+
+
+/* =========================================================
+AI CHAT MESSAGE
+========================================================= */
+
+function appendAIMessage(
+    text,
+    type='ai',
+    label='Gemini 3.6 Flash'
+){
+
+    const chat=
+        document.getElementById(
+            'aiChatMessages'
+        );
+
+
+    const row=
+        document.createElement('div');
+
+
+    row.className=
+        'chat-row '+
+        (type==='user'?'user':'ai');
+
+
+    if(type==='user'){
+
+        row.innerHTML=`
+
+            <div class="chat-message user">
+
+                ${escapeHTML(text)}
+
+            </div>
+
+            <div class="chat-avatar user">
+
+                <i class="fas fa-user"></i>
+
+            </div>
+
+        `;
+
+    }else{
+
+        row.innerHTML=`
+
+            <div class="chat-avatar ai">
+
+                <i class="fas fa-robot"></i>
+
+            </div>
+
+            <div class="chat-message ai">
+
+                <div class="ai-message-meta">
+
+                    ${escapeHTML(label)}
+
+                </div>
+
+                <div class="ai-message-content">
+
+                    ${formatAIText(text)}
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    chat.appendChild(row);
+
+    chat.scrollTop=
+        chat.scrollHeight;
+
+
+    return row;
+
+}
+
+
+/* =========================================================
+TYPING MESSAGE
+========================================================= */
+
+function addTypingMessage(){
+
+    const id=
+        'typing-'+Date.now();
+
+
+    const chat=
+        document.getElementById(
+            'aiChatMessages'
+        );
+
+
+    const row=
+        document.createElement('div');
+
+
+    row.className='chat-row ai';
+
+    row.id=id;
+
+
+    row.innerHTML=`
+
+        <div class="chat-avatar ai">
+
+            <i class="fas fa-robot"></i>
+
+        </div>
+
+
+        <div class="chat-message ai">
+
+            <div class="ai-message-meta">
+                Gemini 3.6 Flash
+            </div>
+
+            <div class="ai-typing">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    chat.appendChild(row);
+
+    chat.scrollTop=
+        chat.scrollHeight;
+
+
+    return id;
+
+}
+
+
+function removeTypingMessage(id){
+
+    const el=
+        document.getElementById(id);
+
+    if(el)
+        el.remove();
+
+}
+
+
+/* =========================================================
+CLEAR AI CHAT
+========================================================= */
+
+function clearAIChat(){
+
+    const chat=
+        document.getElementById(
+            'aiChatMessages'
+        );
+
+
+    chat.innerHTML=`
+
+        <div class="chat-row ai">
+
+            <div class="chat-avatar ai">
+
+                <i class="fas fa-robot"></i>
+
+            </div>
+
+
+            <div class="chat-message ai">
+
+                <div class="ai-message-meta">
+                    Gemini 3.6 Flash
+                </div>
+
+
+                <div class="ai-message-content">
+
+                    <strong>
+                        Hello 👋
+                    </strong>
+
+                    <br>
+
+                    I'm ready to analyze your
+                    WisdomLand financial data.
+
+                    <br><br>
+
+                    Click
+                    <strong>AI Analyze</strong>
+                    or ask a question below.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+RUN GEMINI ANALYSIS
+========================================================= */
+
+async function runGeminiFinanceAnalysis(){
+
+    const button=
+        document.getElementById(
+            'aiAnalyzeButton'
+        );
+
+
+    if(!financeTransactions.length){
+
+        appendAIMessage(
+            '📊 የFinance ዳታ እስካሁን የለም። መጀመሪያ Income ወይም Expense transaction ያስገቡ፣ ከዚያ AI Analyze ይጫኑ።',
+            'ai'
+        );
+
+        return;
+
+    }
+
+
+    button.disabled=true;
+
+    button.innerHTML=`
+
+        <i class="fas fa-spinner fa-spin"></i>
+
+        Analyzing...
+
+    `;
+
+
+    appendAIMessage(
+        '📊 Analyze my current financial data',
+        'user',
+        'Admin'
+    );
+
+
+    const typingId=
+        addTypingMessage();
+
+
+    try{
+
+        const context=
+            buildGeminiFinanceContext();
+
+
+        const prompt=`
+
+You are the official financial AI assistant
+for WisdomLand Academy.
+
+Analyze ONLY the financial data supplied below.
+
+IMPORTANT:
+
+1. Never invent transactions.
+2. Never invent amounts.
+3. Calculate totals correctly.
+4. Identify the largest expense category.
+5. Identify major income sources.
+6. Identify financial risks.
+7. Explain income, expenses, balance
+   and profit margin.
+8. Give 3 to 5 practical recommendations.
+9. Use ETB.
+10. Answer in clear professional Amharic.
+11. Do not claim to be a human accountant.
+12. If data is insufficient, clearly say so.
+
+FINANCIAL DATA:
+
+${JSON.stringify(
+    context,
+    null,
+    2
+)}
+
+Return the response using these headings:
+
+📊 የገንዘብ ማጠቃለያ
+
+🔎 ዋና ግኝቶች
+
+💡 የሚመከሩ እርምጃዎች
+
+⚠️ ማስጠንቀቂያ
+
+Keep it concise and useful for a school administrator.
+
+`;
+
+
+        const answer=
+            await callGeminiAI(prompt);
+
+
+        removeTypingMessage(
+            typingId
+        );
+
+
+        appendAIMessage(
+            answer,
+            'ai'
+        );
+
+
+        showToast(
+            'Gemini financial analysis completed',
+            'success'
+        );
+
+
+    }catch(error){
+
+        removeTypingMessage(
+            typingId
+        );
+
+
+        appendAIMessage(
+            `⚠️ Gemini AI ላይ ችግር ተፈጥሯል። ${error.message}`,
+            'ai',
+            'Gemini Error'
+        );
+
+
+        showToast(
+            'Gemini AI connection failed',
+            'danger'
+        );
+
+    }
+
+
+    button.disabled=false;
+
+    button.innerHTML=`
+
+        <i class="fas fa-wand-magic-sparkles"></i>
+
+        AI Analyze
+
+    `;
+
+}
+
+
+/* =========================================================
+FORMAT AI TEXT
+========================================================= */
+
+function formatAIText(text){
+
+    const lines=
+        String(text||'')
+        .split(/\r?\n/);
+
+
+    let html='';
+    let listType=null;
+
+
+    function closeList(){
+
+        if(listType){
+
+            html+=
+                listType==='ul'
+                ?'</ul>'
+                :'</ol>';
+
+            listType=null;
+
+        }
+
+    }
+
+
+    lines.forEach(rawLine=>{
+
+        const line=
+            rawLine.trim();
+
+
+        if(!line){
+
+            closeList();
+
+            html+=
+                '<div style="height:6px"></div>';
+
+            return;
+
+        }
+
+
+        const escaped=
+            escapeHTML(line);
+
+
+        if(
+            /^(📊|🔎|💡|⚠️)/.test(line)
+        ){
+
+            closeList();
+
+            html+=`
+
+                <h4>
+                    ${escaped}
+                </h4>
+
+            `;
+
+            return;
+
+        }
+
+
+        if(
+            /^[-•]\s+/.test(line)
+        ){
+
+            if(listType!=='ul'){
+
+                closeList();
+
+                html+='<ul>';
+
+                listType='ul';
+
+            }
+
+
+            html+=`
+
+                <li>
+                    ${escapeHTML(
+                        line.replace(
+                            /^[-•]\s+/,
+                            ''
+                        )
+                    )}
+                </li>
+
+            `;
+
+            return;
+
+        }
+
+
+        if(
+            /^\d+[\.\)]\s+/.test(line)
+        ){
+
+            if(listType!=='ol'){
+
+                closeList();
+
+                html+='<ol>';
+
+                listType='ol';
+
+            }
+
+
+            html+=`
+
+                <li>
+                    ${escapeHTML(
+                        line.replace(
+                            /^\d+[\.\)]\s+/,
+                            ''
+                        )
+                    )}
+                </li>
+
+            `;
+
+            return;
+
+        }
+
+
+        closeList();
+
+
+        html+=
+            `<div>${escaped}</div>`;
+
+    });
+
+
+    closeList();
+
+
+    return html;
+
+}
+
+
+/* =========================================================
+ASK GEMINI
+========================================================= */
+
+async function askFinanceAI(e){
+
+    e.preventDefault();
+
+
+    const input=
+        document.getElementById(
+            'aiQuestion'
+        );
+
+
+    const question=
+        input.value.trim();
+
+
+    if(!question)
+        return;
+
+
+    const button=
+        document.getElementById(
+            'aiAskButton'
+        );
+
+
+    appendAIMessage(
+        question,
+        'user',
+        'Admin'
+    );
+
+
+    input.value='';
+
+
+    button.disabled=true;
+
+    button.innerHTML=`
+
+        <i class="fas fa-spinner fa-spin"></i>
+
+        Thinking...
+
+    `;
+
+
+    const typingId=
+        addTypingMessage();
+
+
+    try{
+
+        const context=
+            buildGeminiFinanceContext();
+
+
+        const prompt=`
+
+You are WisdomLand Academy's
+financial AI assistant.
+
+The administrator asked:
+
+"${question}"
+
+Use ONLY the financial data below.
+
+FINANCE DATA:
+
+${JSON.stringify(
+    context,
+    null,
+    2
+)}
+
+RULES:
+
+- Do not invent records.
+- Do not invent amounts.
+- Calculate correctly.
+- Use ETB for money.
+- If there is not enough data,
+  clearly say so.
+- Give practical recommendations
+  when appropriate.
+- If the question is in Amharic,
+  answer in Amharic.
+- If the question is in English,
+  answer in English.
+- Be concise and useful.
+
+`;
+
+
+        const answer=
+            await callGeminiAI(prompt);
+
+
+        removeTypingMessage(
+            typingId
+        );
+
+
+        appendAIMessage(
+            answer,
+            'ai'
+        );
+
+
+    }catch(error){
+
+        removeTypingMessage(
+            typingId
+        );
+
+
+        appendAIMessage(
+            `⚠️ Gemini AI Error: ${error.message}`,
+            'ai',
+            'Gemini Error'
+        );
+
+        showToast(
+            'Gemini AI connection failed',
+            'danger'
+        );
+
+    }
+
+
+    button.disabled=false;
+
+    button.innerHTML=`
+
+        <i class="fas fa-paper-plane"></i>
+
+        Ask Gemini
+
+    `;
+
+}
+
+
+/* =========================================================
+ESCAPE HTML
+========================================================= */
+
+function escapeHTML(text){
+
+    return String(text)
+
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+
+}
+
+
+/* =========================================================
+RESET FILTERS
+========================================================= */
+
+function resetFinanceFilters(){
+
+    document.getElementById(
+        'financeDateFrom'
+    ).value='';
+
+
+    document.getElementById(
+        'financeDateTo'
+    ).value='';
+
+
+    document.getElementById(
+        'financeTypeFilter'
+    ).value='';
+
+
+    document.getElementById(
+        'financeCategoryFilter'
+    ).value='';
+
+
+    document.getElementById(
+        'financeSearch'
+    ).value='';
+
+
+    renderFinance();
+
+}
+
+
+/* =========================================================
+PRINT REPORT
+========================================================= */
+
+function printFinancialReport(){
+
+    const data=
+        getFilteredFinance();
+
+
+    let income=0;
+    let expense=0;
+
+
+    data.forEach(t=>{
+
+        const amount=
+            Number(t.amount)||0;
+
+
+        if(
+            String(t.type)
+            .toLowerCase()
+            ==='income'
+        ){
+
+            income+=amount;
+
+        }else{
+
+            expense+=amount;
+
+        }
+
+    });
+
+
+    const balance=
+        income-expense;
+
+
+    const margin=
+        income>0
+        ?(balance/income)*100
+        :0;
+
+
+    const reportWindow=
+        window.open(
+            '',
+            '_blank'
+        );
+
+
+    if(!reportWindow){
+
+        showToast(
+            'Please allow popups to print the report',
+            'danger'
+        );
+
+        return;
+
+    }
+
+
+    reportWindow.document.write(`
+
+        <html>
+
+        <head>
+
+            <title>
+                WisdomLand Financial Report
+            </title>
+
+            <style>
+
+                body{
+                    font-family:Arial,sans-serif;
+                    padding:40px;
+                    color:#0f172a;
+                }
+
+                h1{
+                    color:#1e3a8a;
+                }
+
+                .summary{
+                    display:grid;
+                    grid-template-columns:
+                        repeat(3,1fr);
+                    gap:20px;
+                    margin:25px 0;
+                }
+
+                .card{
+                    padding:20px;
+                    border:1px solid #ddd;
+                    border-radius:10px;
+                }
+
+                table{
+                    width:100%;
+                    border-collapse:collapse;
+                    margin-top:25px;
+                }
+
+                th,td{
+                    padding:10px;
+                    border:1px solid #ddd;
+                    text-align:left;
+                }
+
+                th{
+                    background:#f1f5f9;
+                }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            <h1>
+                WisdomLand Academy
+            </h1>
+
+            <h2>
+                Financial Report
+            </h2>
+
+            <p>
+                Generated:
+                ${new Date().toLocaleString()}
+            </p>
+
+
+            <div class="summary">
+
+                <div class="card">
+
+                    <strong>
+                        Total Income
+                    </strong>
+
+                    <h2>
+                        ${formatMoney(income)}
+                    </h2>
+
+                </div>
+
+
+                <div class="card">
+
+                    <strong>
+                        Total Expenses
+                    </strong>
+
+                    <h2>
+                        ${formatMoney(expense)}
+                    </h2>
+
+                </div>
+
+
+                <div class="card">
+
+                    <strong>
+                        Net Balance
+                    </strong>
+
+                    <h2>
+                        ${formatMoney(balance)}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <p>
+
+                <strong>
+                    Profit Margin:
+                </strong>
+
+                ${margin.toFixed(1)}%
+
+            </p>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    ${
+                        data
+                        .map(t=>`
+
+                            <tr>
+
+                                <td>
+                                    ${escapeHTML(t.date||'')}
+                                </td>
+
+                                <td>
+                                    ${escapeHTML(t.type||'')}
+                                </td>
+
+                                <td>
+                                    ${escapeHTML(t.category||'')}
+                                </td>
+
+                                <td>
+                                    ${escapeHTML(
+                                        t.description||''
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${formatMoney(
+                                        Number(t.amount)||0
+                                    )}
+                                </td>
+
+                            </tr>
+
+                        `)
+                        .join('')
+                    }
+
+                </tbody>
+
+            </table>
+
+        </body>
+
+        </html>
+
+    `);
+
+
+    reportWindow.document.close();
+
+    reportWindow.focus();
+
+
+    setTimeout(()=>{
+
+        reportWindow.print();
+
+    },500);
+
+}
+
+
+/* =========================================================
+SEARCH
+========================================================= */
+
+document.addEventListener(
+    'DOMContentLoaded',
+    ()=>{
+
+        const searchInput=
+            document.querySelector(
+                '.search-bar input'
+            );
+
+
+        if(searchInput){
+
+            searchInput.addEventListener(
+                'input',
+                function(){
+
+                    const q=
+                        this.value
+                        .toLowerCase()
+                        .trim();
+
+
+                    if(!q)
+                        return;
+
+
+                    if(
+                        q.includes('finance') ||
+                        q.includes('money')
+                    ){
+
+                        switchTab(
+                            'finance',
+                            document.querySelector(
+                                '.sidebar-menu li:nth-child(4) a'
+                            )
+                        );
+
+                        loadFinance();
+
+                    }else if(
+                        q.includes('student')
+                    ){
+
+                        switchTab(
+                            'students',
+                            document.querySelector(
+                                '.sidebar-menu li:nth-child(3) a'
+                            )
+                        );
+
+                    }else if(
+                        q.includes('admission')
+                    ){
+
+                        switchTab(
+                            'admissions',
+                            document.querySelector(
+                                '.sidebar-menu li:nth-child(2) a'
+                            )
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+INITIAL LOAD
+========================================================= */
+
+document.addEventListener(
+    'DOMContentLoaded',
+    ()=>{
+
+        fetchAdminData();
+
+        fetchRegisteredStudents();
+
+        loadFinance();
+
+
+        setTimeout(()=>{
+
+            document
+            .getElementById('pageLoader')
+            .classList
+            .add('hide');
+
+        },900);
+
+    }
+);
+
+
+/* =========================================================
+AUTO UPDATE
+NO GEMINI HERE
+========================================================= */
+
+setInterval(
+    ()=>{
+
+        fetchAdminData();
+
+        fetchRegisteredStudents();
+
+
+        if(
+            document
+            .getElementById('finance')
+            .classList
+            .contains('active')
+        ){
+
+            /*
+            LocalStorage only.
+            Gemini is never called automatically.
+            */
+
+            loadFinance();
+
+        }
+
+    },
+    5000
+);
+
+
+/* =========================================================
+   ADVANCED LOCAL MODULES
+   IMPORTANT: no API endpoint or existing API function is changed.
+========================================================= */
+
+const UX_KEYS = {
+  teachers:'wl_ui_teachers_v1',
+  attendance:'wl_ui_attendance_v1',
+  results:'wl_ui_results_v1',
+  receipts:'wl_ui_receipts_v1',
+  activity:'wl_ui_activity_v1',
+  notifications:'wl_ui_notifications_v1',
+  settings:'wl_ui_settings_v1'
+};
+
+function uxGet(key,fallback=[]){
+  try{const v=JSON.parse(localStorage.getItem(key));return v??fallback}catch(e){return fallback}
+}
+function uxSet(key,value){localStorage.setItem(key,JSON.stringify(value))}
+function uxEsc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function uxMoney(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' ETB'}
+function uxDate(v){return v?new Date(v+'T00:00:00').toLocaleDateString():'—'}
+function uxModal(id){document.getElementById(id)?.classList.add('active')}
+function closeUxModal(id){document.getElementById(id)?.classList.remove('active')}
+function uxLog(action,detail){
+  const list=uxGet(UX_KEYS.activity,[]);
+  list.unshift({id:Date.now(),action,detail,date:new Date().toISOString()});
+  uxSet(UX_KEYS.activity,list.slice(0,200));
+  renderActivity();
+}
+function uxSeed(){
+  if(!localStorage.getItem(UX_KEYS.teachers)) uxSet(UX_KEYS.teachers,[]);
+  if(!localStorage.getItem(UX_KEYS.attendance)) uxSet(UX_KEYS.attendance,{});
+  if(!localStorage.getItem(UX_KEYS.results)) uxSet(UX_KEYS.results,[]);
+  if(!localStorage.getItem(UX_KEYS.receipts)) uxSet(UX_KEYS.receipts,[]);
+  if(!localStorage.getItem(UX_KEYS.activity)) uxSet(UX_KEYS.activity,[]);
+  if(!localStorage.getItem(UX_KEYS.notifications)) uxSet(UX_KEYS.notifications,[]);
+  const s=uxGet(UX_KEYS.settings,{});
+  uxSet(UX_KEYS.settings,s);
+}
+
+function saveTeacher(e){
+  e.preventDefault();
+  const list=uxGet(UX_KEYS.teachers,[]);
+  const id=document.getElementById('teacherId').value.trim();
+  if(list.some(x=>x.id.toLowerCase()===id.toLowerCase())){showToast('Teacher ID already exists','danger');return}
+  list.unshift({
+    id,name:document.getElementById('teacherName').value.trim(),
+    subject:document.getElementById('teacherSubject').value.trim(),
+    className:document.getElementById('teacherClass').value.trim(),
+    phone:document.getElementById('teacherPhone').value.trim(),
+    salary:Number(document.getElementById('teacherSalary').value)||0,
+    status:document.getElementById('teacherStatusInput').value,
+    createdAt:new Date().toISOString()
+  });
+  uxSet(UX_KEYS.teachers,list); uxLog('Teacher added',`${id} • ${list[0].name}`);
+  e.target.reset(); closeUxModal('teacherModal'); renderTeachers(); generateUxNotifications(); showToast('Teacher added successfully','success');
+}
+function deleteTeacher(id){
+  if(!confirm('Delete this local teacher record?'))return;
+  uxSet(UX_KEYS.teachers,uxGet(UX_KEYS.teachers,[]).filter(x=>x.id!==id));
+  uxLog('Teacher deleted',id);renderTeachers();showToast('Teacher deleted','success');
+}
+function editTeacher(id){
+  const t=uxGet(UX_KEYS.teachers,[]).find(x=>x.id===id); if(!t)return;
+  document.getElementById('teacherId').value=t.id;document.getElementById('teacherName').value=t.name;
+  document.getElementById('teacherSubject').value=t.subject;document.getElementById('teacherClass').value=t.className;
+  document.getElementById('teacherPhone').value=t.phone;document.getElementById('teacherSalary').value=t.salary;
+  document.getElementById('teacherStatusInput').value=t.status;uxModal('teacherModal');
+  const form=document.querySelector('#teacherModal form');
+  form.onsubmit=function(e){
+    e.preventDefault();
+    const a=uxGet(UX_KEYS.teachers,[]);const i=a.findIndex(x=>x.id===id);
+    a[i]={...a[i],name:teacherName.value.trim(),subject:teacherSubject.value.trim(),className:teacherClass.value.trim(),phone:teacherPhone.value.trim(),salary:Number(teacherSalary.value)||0,status:teacherStatusInput.value};
+    uxSet(UX_KEYS.teachers,a);uxLog('Teacher updated',id);closeUxModal('teacherModal');renderTeachers();showToast('Teacher updated','success');
+    form.onsubmit=saveTeacher;
+  };
+}
+function renderTeachers(){
+  const list=uxGet(UX_KEYS.teachers,[]),q=(document.getElementById('teacherSearch')?.value||'').toLowerCase(),st=document.getElementById('teacherStatus')?.value||'';
+  const filtered=list.filter(t=>(!q||`${t.id} ${t.name} ${t.subject} ${t.phone}`.toLowerCase().includes(q))&&(!st||t.status===st));
+  const active=list.filter(x=>x.status==='Active').length;
+  const payroll=list.reduce((s,x)=>s+(Number(x.salary)||0),0);
+  document.getElementById('teacherKpis').innerHTML=`
+   <div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-users"></i></div><div><strong>${list.length}</strong><p>Total Teachers</p></div></div>
+   <div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-user-check"></i></div><div><strong>${active}</strong><p>Active</p></div></div>
+   <div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-money-bill-wave"></i></div><div><strong>${uxMoney(payroll)}</strong><p>Monthly Payroll</p></div></div>
+   <div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-book"></i></div><div><strong>${new Set(list.map(x=>x.subject).filter(Boolean)).size}</strong><p>Subjects</p></div></div>`;
+  const body=document.getElementById('teachersUxBody');
+  body.innerHTML=filtered.length?filtered.map(t=>`<tr><td>${uxEsc(t.id)}</td><td><strong>${uxEsc(t.name)}</strong></td><td>${uxEsc(t.subject||'—')}</td><td>${uxEsc(t.className||'—')}</td><td>${uxEsc(t.phone||'—')}</td><td>${uxMoney(t.salary)}</td><td><span class="ux-badge ${t.status==='Active'?'ux-success':t.status==='On Leave'?'ux-warning':'ux-muted'}">${uxEsc(t.status)}</span></td><td><button class="ux-icon-btn" onclick="editTeacher('${uxEsc(t.id)}')" title="Edit"><i class="fas fa-pen"></i></button> <button class="ux-icon-btn" onclick="deleteTeacher('${uxEsc(t.id)}')" title="Delete"><i class="fas fa-trash"></i></button></td></tr>`).join(''):`<tr><td colspan="8"><div class="ux-empty"><i class="fas fa-chalkboard-user"></i>No teacher records yet.</div></td></tr>`;
+}
+
+/* Attendance */
+function attendancePeople(){
+  const group=document.getElementById('attendanceGroup')?.value||'students';
+  if(group==='teachers') return uxGet(UX_KEYS.teachers,[]).map(x=>({id:x.id,name:x.name}));
+  return (students||[]).map((x,i)=>({id:x.id||`ST-${i+1}`,name:x.fullName||x.name||[x.firstName,x.fatherName,x.grandfatherName].filter(Boolean).join(' ')||'Student'}));
+}
+function attendanceRecord(date,group){
+  const all=uxGet(UX_KEYS.attendance,{});
+  all[`${date}_${group}`]=all[`${date}_${group}`]||{};
+  return all[`${date}_${group}`];
+}
+function markAttendance(id,status){
+  const date=document.getElementById('attendanceDate').value,group=document.getElementById('attendanceGroup').value;
+  const all=uxGet(UX_KEYS.attendance,{});const key=`${date}_${group}`;all[key]=all[key]||{};all[key][id]=status;uxSet(UX_KEYS.attendance,all);renderAttendance();
+}
+function saveAttendanceDay(){const date=attendanceDate.value;if(!date){showToast('Choose a date','danger');return}uxLog('Attendance saved',`${attendanceGroup.value} • ${date}`);showToast('Attendance saved locally','success');generateUxNotifications()}
+function renderAttendance(){
+  const date=document.getElementById('attendanceDate')?.value;if(!date)return;
+  const people=attendancePeople(),q=(document.getElementById('attendanceSearch')?.value||'').toLowerCase(),rec=attendanceRecord(date,attendanceGroup.value);
+  const filtered=people.filter(p=>`${p.id} ${p.name}`.toLowerCase().includes(q));
+  let p=0,a=0,l=0;Object.values(rec).forEach(v=>{if(v==='Present')p++;if(v==='Absent')a++;if(v==='Late')l++});
+  const total=people.length;
+  document.getElementById('attendanceKpis').innerHTML=`
+   <div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-users"></i></div><div><strong>${total}</strong><p>Total ${attendanceGroup.value}</p></div></div>
+   <div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-user-check"></i></div><div><strong>${p}</strong><p>Present</p></div></div>
+   <div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-user-xmark"></i></div><div><strong>${a}</strong><p>Absent</p></div></div>
+   <div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-clock"></i></div><div><strong>${l}</strong><p>Late</p></div></div>`;
+  document.getElementById('attendanceBody').innerHTML=filtered.length?filtered.map(x=>`<tr><td>${uxEsc(x.id)}</td><td><strong>${uxEsc(x.name)}</strong></td><td>${rec[x.id]==='Present'?'✓':'—'}</td><td>${rec[x.id]==='Absent'?'✓':'—'}</td><td>${rec[x.id]==='Late'?'✓':'—'}</td><td><span class="ux-badge ${rec[x.id]==='Present'?'ux-success':rec[x.id]==='Absent'?'ux-danger':rec[x.id]==='Late'?'ux-warning':'ux-muted'}">${rec[x.id]||'Not marked'}</span></td><td><div class="ux-att"><button class="p" onclick="markAttendance('${uxEsc(x.id)}','Present')">Present</button><button class="a" onclick="markAttendance('${uxEsc(x.id)}','Absent')">Absent</button><button class="l" onclick="markAttendance('${uxEsc(x.id)}','Late')">Late</button></div></td></tr>`).join(''):`<tr><td colspan="7"><div class="ux-empty"><i class="fas fa-calendar-xmark"></i>No people available. Teachers can be added above; student list comes from your existing system.</div></td></tr>`;
+}
+function printAttendance(){
+  const d=attendanceDate.value||new Date().toISOString().slice(0,10), group=attendanceGroup.value,rec=attendanceRecord(d,group),people=attendancePeople();
+  const w=window.open('','_blank');if(!w)return;
+  w.document.write(`<html><head><title>WisdomLand Attendance</title><style>body{font-family:Arial;padding:30px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:9px;text-align:left}th{background:#f1f5f9}</style></head><body><h1>WisdomLand Academy</h1><h2>Attendance Report</h2><p>Date: ${uxEsc(d)} | Group: ${uxEsc(group)}</p><table><tr><th>ID</th><th>Name</th><th>Status</th></tr>${people.map(x=>`<tr><td>${uxEsc(x.id)}</td><td>${uxEsc(x.name)}</td><td>${uxEsc(rec[x.id]||'Not marked')}</td></tr>`).join('')}</table></body></html>`);w.document.close();w.print();
+}
+
+/* Results */
+function resultGrade(mark){mark=Number(mark);return mark>=90?'A+':mark>=85?'A':mark>=80?'B+':mark>=75?'B':mark>=70?'C+':mark>=60?'C':mark>=50?'D':'F'}
+function saveResult(e){
+  e.preventDefault();const list=uxGet(UX_KEYS.results,[]);const mark=Number(resultMark.value);
+  list.unshift({id:Date.now(),student:resultStudent.value.trim(),studentId:resultStudentId.value.trim(),gradeLevel:resultGrade.value.trim(),subject:resultSubject.value.trim(),exam:resultExam.value.trim(),mark,date:new Date().toISOString().slice(0,10)});
+  uxSet(UX_KEYS.results,list);uxLog('Result added',`${resultStudent.value.trim()} • ${resultSubject.value.trim()}`);e.target.reset();resultExam.value='Final Exam';closeUxModal('resultModal');renderResults();showToast('Exam result saved','success');
+}
+function deleteResult(id){if(!confirm('Delete this result?'))return;uxSet(UX_KEYS.results,uxGet(UX_KEYS.results,[]).filter(x=>x.id!==id));uxLog('Result deleted',String(id));renderResults()}
+function renderResults(){
+  const list=uxGet(UX_KEYS.results,[]),q=(resultSearch?.value||'').toLowerCase(),g=resultGradeFilter?.value||'',f=list.filter(x=>(!q||`${x.student} ${x.studentId} ${x.subject}`.toLowerCase().includes(q))&&(!g||x.gradeLevel===g));
+  const avg=list.length?list.reduce((s,x)=>s+Number(x.mark),0)/list.length:0,passed=list.filter(x=>Number(x.mark)>=50).length;
+  academicKpis.innerHTML=`<div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-file-lines"></i></div><div><strong>${list.length}</strong><p>Total Results</p></div></div><div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-chart-line"></i></div><div><strong>${avg.toFixed(1)}</strong><p>Average / 100</p></div></div><div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-circle-check"></i></div><div><strong>${passed}</strong><p>Passed</p></div></div><div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-percent"></i></div><div><strong>${list.length?(passed/list.length*100).toFixed(0):0}%</strong><p>Pass Rate</p></div></div>`;
+  resultsBody.innerHTML=f.length?f.map(x=>`<tr><td><strong>${uxEsc(x.student)}</strong></td><td>${uxEsc(x.studentId||'—')}</td><td>${uxEsc(x.gradeLevel||'—')}</td><td>${uxEsc(x.subject)}</td><td>${uxEsc(x.exam)}</td><td><strong>${Number(x.mark).toFixed(1)}</strong></td><td><span class="ux-badge ${Number(x.mark)>=50?'ux-success':'ux-danger'}">${resultGrade(x.mark)}</span></td><td><button class="ux-icon-btn" onclick="deleteResult(${x.id})"><i class="fas fa-trash"></i></button></td></tr>`).join(''):`<tr><td colspan="8"><div class="ux-empty"><i class="fas fa-graduation-cap"></i>No results recorded yet.</div></td></tr>`;
+}
+function printResults(){
+  const list=uxGet(UX_KEYS.results,[]),w=window.open('','_blank');if(!w)return;
+  w.document.write(`<html><head><title>WisdomLand Results</title><style>body{font-family:Arial;padding:30px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px}th{background:#f1f5f9}</style></head><body><h1>WisdomLand Academy</h1><h2>Exam Results</h2><table><tr><th>Student</th><th>ID</th><th>Grade</th><th>Subject</th><th>Exam</th><th>Mark</th><th>Grade</th></tr>${list.map(x=>`<tr><td>${uxEsc(x.student)}</td><td>${uxEsc(x.studentId)}</td><td>${uxEsc(x.gradeLevel)}</td><td>${uxEsc(x.subject)}</td><td>${uxEsc(x.exam)}</td><td>${Number(x.mark).toFixed(1)}</td><td>${resultGrade(x.mark)}</td></tr>`).join('')}</table></body></html>`);w.document.close();w.print();
+}
+
+/* Receipts */
+function saveReceipt(e){
+  e.preventDefault();const list=uxGet(UX_KEYS.receipts,[]),no='WL-RC-'+String(list.length+1).padStart(5,'0');
+  const r={id:Date.now(),receiptNo:no,student:receiptStudent.value.trim(),studentId:receiptStudentId.value.trim(),category:receiptCategory.value,amount:Number(receiptAmount.value)||0,payment:receiptPayment.value,date:receiptDate.value,description:receiptDescription.value.trim()};
+  list.unshift(r);uxSet(UX_KEYS.receipts,list);uxLog('Receipt created',`${no} • ${r.student} • ${uxMoney(r.amount)}`);e.target.reset();receiptDate.value=new Date().toISOString().slice(0,10);closeUxModal('receiptModal');renderReceipts();generateUxNotifications();showToast('Receipt created successfully','success');printReceipt(no);
+}
+function deleteReceipt(no){if(!confirm('Delete this local receipt?'))return;uxSet(UX_KEYS.receipts,uxGet(UX_KEYS.receipts,[]).filter(x=>x.receiptNo!==no));uxLog('Receipt deleted',no);renderReceipts()}
+function printReceipt(no){
+  const r=uxGet(UX_KEYS.receipts,[]).find(x=>x.receiptNo===no);if(!r)return;const s=uxGet(UX_KEYS.settings,{});
+  const w=window.open('','_blank');if(!w){showToast('Allow popups to print receipt','danger');return}
+  w.document.write(`<html><head><title>${uxEsc(r.receiptNo)}</title><style>body{font-family:Arial;padding:35px;max-width:700px;margin:auto}.head{text-align:center;border-bottom:2px dashed #999;padding-bottom:20px}.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eee}.total{font-size:22px;font-weight:bold;margin-top:20px}</style></head><body><div class="head"><img src="Logo.jpg" style="width:60px;height:60px;object-fit:cover;border-radius:12px"><h1>${uxEsc(s.schoolName||'WisdomLand Academy')}</h1><p>OFFICIAL PAYMENT RECEIPT</p></div><div class="row"><b>Receipt No.</b><span>${uxEsc(r.receiptNo)}</span></div><div class="row"><b>Date</b><span>${uxEsc(r.date)}</span></div><div class="row"><b>Student / Payer</b><span>${uxEsc(r.student)}</span></div><div class="row"><b>Student ID</b><span>${uxEsc(r.studentId||'—')}</span></div><div class="row"><b>Category</b><span>${uxEsc(r.category)}</span></div><div class="row"><b>Payment Method</b><span>${uxEsc(r.payment)}</span></div><div class="row"><b>Description</b><span>${uxEsc(r.description||'—')}</span></div><div class="total"><span>Total</span><span>${uxMoney(r.amount)}</span></div><p style="text-align:center;margin-top:45px">Thank you.</p></body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),300)
+}
+function renderReceipts(){
+  const list=uxGet(UX_KEYS.receipts,[]),q=(receiptSearch?.value||'').toLowerCase(),f=list.filter(x=>`${x.receiptNo} ${x.student} ${x.amount}`.toLowerCase().includes(q)),total=list.reduce((s,x)=>s+Number(x.amount),0);
+  receiptKpis.innerHTML=`<div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-receipt"></i></div><div><strong>${list.length}</strong><p>Total Receipts</p></div></div><div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-money-bill"></i></div><div><strong>${uxMoney(total)}</strong><p>Total Collected</p></div></div><div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-calendar-day"></i></div><div><strong>${list.filter(x=>x.date===new Date().toISOString().slice(0,10)).length}</strong><p>Today</p></div></div><div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-wallet"></i></div><div><strong>${list.length?uxMoney(total/list.length):uxMoney(0)}</strong><p>Average Receipt</p></div></div>`;
+  receiptsBody.innerHTML=f.length?f.map(x=>`<tr><td><strong>${uxEsc(x.receiptNo)}</strong></td><td>${uxEsc(x.date)}</td><td>${uxEsc(x.student)}</td><td>${uxEsc(x.category)}</td><td>${uxEsc(x.payment)}</td><td><strong>${uxMoney(x.amount)}</strong></td><td><button class="ux-icon-btn" onclick="printReceipt('${uxEsc(x.receiptNo)}')"><i class="fas fa-print"></i></button> <button class="ux-icon-btn" onclick="deleteReceipt('${uxEsc(x.receiptNo)}')"><i class="fas fa-trash"></i></button></td></tr>`).join(''):`<tr><td colspan="7"><div class="ux-empty"><i class="fas fa-receipt"></i>No receipts yet.</div></td></tr>`;
+}
+
+/* Activity */
+function renderActivity(){
+  const list=uxGet(UX_KEYS.activity,[]),box=document.getElementById('activityList');if(!box)return;
+  box.innerHTML=list.length?list.map(x=>`<div class="ux-activity"><span class="ux-dot"></span><div><strong>${uxEsc(x.action)}</strong><div style="font-size:.78rem;color:#64748b">${uxEsc(x.detail)}</div><small style="color:#94a3b8">${new Date(x.date).toLocaleString()}</small></div></div>`).join(''):`<div class="ux-empty"><i class="fas fa-clock-rotate-left"></i>No local activity yet.</div>`;
+}
+function clearActivityLog(){if(!confirm('Clear local activity log?'))return;uxSet(UX_KEYS.activity,[]);renderActivity();showToast('Activity log cleared','success')}
+
+/* Notifications */
+function generateUxNotifications(){
+  const now=new Date().toISOString().slice(0,10),notes=[],teachers=uxGet(UX_KEYS.teachers,[]),results=uxGet(UX_KEYS.results,[]),receipts=uxGet(UX_KEYS.receipts,[]);
+  if(teachers.filter(x=>x.status==='Active').length===0)notes.push({id:'teachers',icon:'fa-chalkboard-user',title:'No active teachers',detail:'Add teacher records to start the local teacher module.',read:false});
+  if(results.length===0)notes.push({id:'results',icon:'fa-graduation-cap',title:'No exam results',detail:'Record exam results from Exams & Results.',read:false});
+  if(receipts.filter(x=>x.date===now).length===0)notes.push({id:'receipt',icon:'fa-receipt',title:'No receipt recorded today',detail:'Create a receipt when a payment is received.',read:false});
+  const existing=uxGet(UX_KEYS.notifications,[]),merged=[...notes,...existing.filter(x=>!notes.some(n=>n.id===x.id))].slice(0,50);uxSet(UX_KEYS.notifications,merged);renderNotifications();
+}
+function renderNotifications(){
+  const list=uxGet(UX_KEYS.notifications,[]),unread=list.filter(x=>!x.read).length;
+  notificationKpis.innerHTML=`<div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-bell"></i></div><div><strong>${list.length}</strong><p>Total Alerts</p></div></div><div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-envelope"></i></div><div><strong>${unread}</strong><p>Unread</p></div></div><div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-circle-check"></i></div><div><strong>${list.length-unread}</strong><p>Read</p></div></div><div class="ux-card ux-kpi"><div class="ux-kpi-icon"><i class="fas fa-shield"></i></div><div><strong>LOCAL</strong><p>Alert Engine</p></div></div>`;
+  notificationList.innerHTML=list.length?list.map(x=>`<div class="ux-notice" onclick="readUxNotification('${uxEsc(x.id)}')"><i class="fas ${uxEsc(x.icon||'fa-bell')}"></i><div style="flex:1"><strong>${uxEsc(x.title)}</strong><div style="font-size:.78rem;color:#64748b">${uxEsc(x.detail)}</div></div>${x.read?'<span class="ux-badge ux-muted">Read</span>':'<span class="ux-badge ux-info">New</span>'}</div>`).join(''):`<div class="ux-empty"><i class="fas fa-bell-slash"></i>No alerts.</div>`;
+}
+function readUxNotification(id){const a=uxGet(UX_KEYS.notifications,[]);const x=a.find(n=>n.id===id);if(x)x.read=true;uxSet(UX_KEYS.notifications,a);renderNotifications()}
+function markAllUxNotificationsRead(){const a=uxGet(UX_KEYS.notifications,[]).map(x=>({...x,read:true}));uxSet(UX_KEYS.notifications,a);renderNotifications()}
+
+/* Settings / theme */
+function toggleUxDark(on){document.body.classList.toggle('ux-dark-mode',on);const s=uxGet(UX_KEYS.settings,{});s.dark=on;uxSet(UX_KEYS.settings,s)}
+function toggleUxCompact(on){document.body.classList.toggle('ux-compact',on);const s=uxGet(UX_KEYS.settings,{});s.compact=on;uxSet(UX_KEYS.settings,s)}
+function saveSchoolSettings(e){e.preventDefault();const s=uxGet(UX_KEYS.settings,{});s.schoolName=setSchoolName.value.trim();s.academicYear=setAcademicYear.value.trim();s.phone=setSchoolPhone.value.trim();s.email=setSchoolEmail.value.trim();s.address=setSchoolAddress.value.trim();uxSet(UX_KEYS.settings,s);uxLog('Settings updated','School information saved');showToast('Settings saved','success')}
+function loadUxSettings(){
+  const s=uxGet(UX_KEYS.settings,{});
+  if(s.dark){darkModeToggle.checked=true;toggleUxDark(true)}
+  if(s.compact){compactToggle.checked=true;toggleUxCompact(true)}
+  if(s.schoolName)setSchoolName.value=s.schoolName;if(s.academicYear)setAcademicYear.value=s.academicYear;if(s.phone)setSchoolPhone.value=s.phone;if(s.email)setSchoolEmail.value=s.email;if(s.address)setSchoolAddress.value=s.address;
+}
+function exportUxData(type){
+  const map={teachers:UX_KEYS.teachers,attendance:UX_KEYS.attendance,results:UX_KEYS.results,receipts:UX_KEYS.receipts};
+  const blob=new Blob([JSON.stringify(uxGet(map[type],[]),null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`wisdomland-${type}.json`;a.click();URL.revokeObjectURL(a.href);uxLog('Data exported',type)
+}
+function exportAllUxData(){
+  const out={};Object.keys(UX_KEYS).forEach(k=>out[k]=uxGet(UX_KEYS[k],[]));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,2)],{type:'application/json'}));a.download='wisdomland-local-data.json';a.click();URL.revokeObjectURL(a.href);uxLog('All local data exported','JSON backup')
+}
+function importUxData(){
+  const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.onchange=async()=>{try{const obj=JSON.parse(await input.files[0].text());Object.keys(UX_KEYS).forEach(k=>{if(obj[k]!==undefined)uxSet(UX_KEYS[k],obj[k])});renderTeachers();renderAttendance();renderResults();renderReceipts();renderActivity();generateUxNotifications();loadUxSettings();showToast('Local data imported','success')}catch(e){showToast('Invalid JSON file','danger')}};input.click()
+}
+function resetUxData(){
+  if(!confirm('Reset all data added by these new UI modules? Existing API data is not touched.'))return;
+  Object.values(UX_KEYS).forEach(k=>localStorage.removeItem(k));uxSeed();renderTeachers();renderAttendance();renderResults();renderReceipts();renderActivity();generateUxNotifications();showToast('Added UI data reset','success')
+}
+
+/* Hook initialization without replacing the original API initialization. */
+document.addEventListener('DOMContentLoaded',()=>{
+  uxSeed();loadUxSettings();
+  const d=document.getElementById('attendanceDate');if(d)d.value=new Date().toISOString().slice(0,10);
+  const rd=document.getElementById('receiptDate');if(rd)rd.value=new Date().toISOString().slice(0,10);
+  renderTeachers();renderAttendance();renderResults();renderReceipts();renderActivity();generateUxNotifications();
+});
+
+
+
+  //ai change Code 
+  function openUxModal(id){
+    const modal = document.getElementById(id);
+
+    if(!modal){
+        console.error("Modal not found:", id);
+        return;
+    }
+
+    modal.classList.add('active');
+}
+
+  //change 2
+
+
+  function closeUxModal(id){
+    const modal = document.getElementById(id);
+
+    if(!modal) return;
+
+    modal.classList.remove('active');
+}
+
+
+    // Settings ውስጥ Password ለመቀየር የሚያገለግል ዋና Function
+function changePassword(oldPassword, newPassword) {
+    // በLocalStorage ውስጥ የተቀመጠውን የአሁኑን Password ማግኘት
+    const currentPassword = localStorage.getItem("wisdomland_password") || "wisdomland@123";
+
+    if (oldPassword !== currentPassword) {
+        return { success: false, message: "የነበረው (የአሁኑ) የይለፍ ቃል ትክክል አይደለም!" };
+    }
+
+    if (newPassword.length < 6) {
+        return { success: false, message: "አዲሱ የይለፍ ቃል ቢያንስ 6 ፊደላት/ቁጥሮች መያዝ አለበት!" };
+    }
+
+    // አዲሱን የይለፍ ቃል በ LocalStorage ውስጥ መዝግቦ ማስቀመጥ
+    localStorage.setItem("wisdomland_password", newPassword);
+    return { success: true, message: "የይለፍ ቃልዎ በተሳካ ሁኔታ ተቀይሯል!" };
+}
+
+// Form Submission Event Listener
+document.getElementById("changePasswordForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const oldPass = document.getElementById("oldPassword").value;
+    const newPass = document.getElementById("newPassword").value;
+    const confirmPass = document.getElementById("confirmPassword").value;
+    const statusMsg = document.getElementById("statusMessage");
+
+    // አዲሱና ማረጋገጫው Password ተመሳሳይ መሆናቸውን ማረጋገጥ
+    if (newPass !== confirmPass) {
+        statusMsg.className = "status-msg error";
+        statusMsg.textContent = "አዲሱ የይለፍ ቃል እና ማረጋገጫው አይመሳሰሉም!";
+        return;
+    }
+
+    // Function-ኡን መጥራት
+    const result = changePassword(oldPass, newPass);
+
+    if (result.success) {
+        statusMsg.className = "status-msg success";
+        statusMsg.textContent = result.message;
+        // ፎርሙን ባዶ ማድረግ (Clear input fields)
+        document.getElementById("changePasswordForm").reset();
+    } else {
+        statusMsg.className = "status-msg error";
+        statusMsg.textContent = result.message;
+    }
+});
+  
+</script>
+
+</body>
+</html>
